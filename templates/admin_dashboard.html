@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ user.name }} (Admin)</h2>
+
+    <p>What would you like to do?</p>
+
+    <a href="{{ url_for('manage_emails') }}">
+        <button>Manage Email Pool</button>
+    </a>
+
+    <a href="{{ url_for('manage_interns') }}">
+        <button>Manage Interns</button>
+    </a>
+
+    <a href="{{ url_for('logout') }}">
+        <button>Logout</button>
+    </a>
+</body>
+</html>

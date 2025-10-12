@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Interns</title>
+</head>
+<body>
+    <h2>Manage Interns</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li><strong>{{ category }}:</strong> {{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Intern Table -->
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for intern in interns %}
+            <tr>
+                <td>{{ intern.id }}</td>
+                <td>{{ intern.name }}</td>
+                <td>{{ intern.email }}</td>
+                <td>
+                    <form action="{{ url_for('delete_intern', id=intern.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Delete this intern?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4">No interns registered yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{{ url_for('admin_dashboard') }}">⬅ Back to Dashboard</a>
+</body>
+</html>

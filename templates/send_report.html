@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        select {
+            width: 300px;
+            padding: 5px;
+        }
+
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+            width: 300px;
+        }
+
+        .dropdown-selected {
+            border: 1px solid #ccc;
+            padding: 8px;
+            cursor: pointer;
+            background-color: white;
+        }
+
+        .dropdown-options {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .dropdown-options label {
+            display: block;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-options label:hover {
+            background-color: #f0f0f0;
+        }
+
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Send Report</h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li><strong>{{ category }}:</strong> {{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('send_report') }}" method="POST">
+        <label for="recipient">Select Engineer(s):</label><br>
+
+        <!-- Dropdown multi-select -->
+        <div class="dropdown-container">
+            <div class="dropdown-selected" onclick="toggleDropdown()">Select recipients</div>
+            <div class="dropdown-options">
+                {% for r in recipients %}
+                <label>
+                    <input type="checkbox" name="recipients" value="{{ r.email }}"> {{ r.email }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <br><br>
+
+        <label for="subject">Subject:</label><br>
+        <input type="text" name="subject" required><br><br>
+
+        <label for="body">Message:</label><br>
+        <textarea name="body" rows="6" cols="40" required></textarea><br><br>
+
+        <button type="submit">Send Report</button>
+    </form>
+
+    <p><a href="{{ url_for('intern_dashboard') }}">Back to Dashboard</a></p>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.querySelector('.dropdown-options');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown-options');
+            const selected = document.querySelector('.dropdown-selected');
+            if (!selected.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Update label text with selected emails
+        const checkboxes = document.querySelectorAll('input[type=checkbox][name=recipients]');
+        const selectedText = document.querySelector('.dropdown-selected');
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const selectedEmails = Array.from(checkboxes)
+                    .filter(c => c.checked)
+                    .map(c => c.value)
+                    .join(', ');
+                selectedText.textContent = selectedEmails || 'Select recipients';
+            });
+        });
+    </script>
+</body>
+</html>

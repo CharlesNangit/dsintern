@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Email Pool</title>
+</head>
+<body>
+  <h2>Email Pool Management (Admin)</h2>
+  <p>Welcome, {{ current_user.name }}!</p>
+
+  <form method="POST">
+      <input type="email" name="email" placeholder="Enter new recipient email" required>
+      <button type="submit">Add Email</button>
+  </form>
+
+  <h3>Stored Emails:</h3>
+  <ul>
+    {% for e in emails %}
+      <li>{{ e.email }} — <a href="{{ url_for('delete_email', id=e.id) }}">Delete</a></li>
+    {% endfor %}
+  </ul>
+
+  <a href="{{ url_for('admin_dashboard') }}">
+    <button>Return to Dashboard</button>
+</a>
+
+</body>
+</html>
