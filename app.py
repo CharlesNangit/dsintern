@@ -5,6 +5,9 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 # Shared intern email (the one all interns will use)
 SHARED_INTERN_EMAIL = "desksideintern@gmail.com"  # Replace with your actual shared Outlook email
@@ -19,11 +22,8 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 # --- Email Config ---
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'desksideintern@gmail.com'  # Shared Outlook email
-app.config['MAIL_PASSWORD'] = 'wpiyzrcfjsdfcyxx'  # Outlook App Password
+app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
+app.config['MAIL_SENDER'] = 'desksideintern@gmail.com'  # Same "from" email
 
 # --- User Model ---
 class User(db.Model, UserMixin):
@@ -206,7 +206,7 @@ def send_report():
     recipients = EmailRecipient.query.all()
 
     if request.method == 'POST':
-        selected_emails = request.form.getlist('recipients')  # ← note the plural
+        selected_emails = request.form.getlist('recipients')
         subject = request.form.get('subject')
         body = request.form.get('body')
 
@@ -215,19 +215,19 @@ def send_report():
             return redirect(url_for('send_report'))
 
         try:
-            for email_addr in selected_emails:
-                msg = MIMEMultipart()
-                msg['From'] = app.config['MAIL_USERNAME']
-                msg['To'] = email_addr
-                msg['Subject'] = subject
-                msg.attach(MIMEText(body, 'plain'))
+            sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
 
-                with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT']) as server:
-                    server.starttls()
-                    server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
-                    server.send_message(msg)
+            for email_addr in selected_emails:
+                message = Mail(
+                    from_email=app.config['MAIL_SENDER'],
+                    to_emails=email_addr,
+                    subject=subject,
+                    plain_text_content=body
+                )
+                sg.send(message)
 
             flash(f'Report sent successfully to {len(selected_emails)} recipient(s).', 'success')
+
         except Exception as e:
             flash(f'Failed to send emails: {e}', 'danger')
 

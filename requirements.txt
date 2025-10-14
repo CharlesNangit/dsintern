@@ -2,8 +2,9 @@ Flask
 Flask-Login
 Flask-SQLAlchemy
 Flask-Mail
-Flask-Bcrypt
 Werkzeug
 gunicorn
 email-validator
 bcrypt
+flask-bcrypt
+sendgrid
