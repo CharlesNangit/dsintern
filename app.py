@@ -15,7 +15,7 @@ SHARED_INTERN_EMAIL = "desksideintern@gmail.com"  # Replace with your actual sha
 # --- App Config ---
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'devsecret123'  # Change this later for security
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///users.db')
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
