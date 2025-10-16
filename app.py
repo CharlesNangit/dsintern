@@ -15,7 +15,7 @@ SHARED_INTERN_EMAIL = "desksideintern@gmail.com"  # Replace with your actual sha
 # --- App Config ---
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'devsecret123'  # Change this later for security
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -23,7 +23,8 @@ login_manager.login_view = 'login'
 
 # --- Email Config ---
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
-app.config['MAIL_SENDER'] = 'desksideintern@gmail.com'  # Same "from" email
+app.config['MAIL_SENDER'] = "desksideintern@sendgrid.me"  # safer domain for Outlook delivery
+app.config['MAIL_REPLY_TO'] = "desksideintern@gmail.com"   # where replies go
 
 # --- User Model ---
 class User(db.Model, UserMixin):
@@ -51,21 +52,23 @@ def register():
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
-        role = 'intern'  # 🔒 force all registrations to be interns
+        role = 'intern'
 
-        # --- Check intern email ---
+        # Force use of shared intern email domain
         if email != SHARED_INTERN_EMAIL:
             flash(f'Invalid email. All interns must register using {SHARED_INTERN_EMAIL}.', 'danger')
             return redirect(url_for('register'))
 
-        # --- Check if name already exists ---
-        existing_user = User.query.filter_by(name=name).first()
+        # Make each intern’s email unique internally
+        unique_email = f"{name.lower()}_{email}"
+
+        existing_user = User.query.filter_by(email=unique_email).first()
         if existing_user:
-            flash('This name is already registered. Please choose another name.', 'danger')
+            flash('This intern name already exists. Please choose another.', 'danger')
             return redirect(url_for('register'))
 
         hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(name=name, email=email, password=hashed_pw, role=role)
+        new_user = User(name=name, email=unique_email, password=hashed_pw, role=role)
         db.session.add(new_user)
         db.session.commit()
 
@@ -82,7 +85,7 @@ def login():
 
         print(f"🟩 Received Login Data:\nEmail: {email}\nPassword: {password}")
 
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter(User.email.like(f"%{email}%")).first()
         print(f"🟩 User Found: {user}")
 
         if user and bcrypt.check_password_hash(user.password, password):
@@ -219,12 +222,16 @@ def send_report():
 
             for email_addr in selected_emails:
                 message = Mail(
-                    from_email=app.config['MAIL_SENDER'],
+                    from_email=("desksideintern@sendgrid.me", "Tech Support Team"),  # Trusted domain
                     to_emails=email_addr,
                     subject=subject,
                     plain_text_content=body
                 )
-                sg.send(message)
+                message.reply_to = "desksideintern@gmail.com"
+                response = sg.send(message)
+
+                # Log the result in Render logs
+                print(f"📨 Sent to {email_addr} | Status: {response.status_code}")
 
             flash(f'Report sent successfully to {len(selected_emails)} recipient(s).', 'success')
 

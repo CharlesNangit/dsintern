@@ -8,3 +8,4 @@ email-validator
 bcrypt
 flask-bcrypt
 sendgrid
+python-dotenv
