@@ -9,3 +9,4 @@ bcrypt
 flask-bcrypt
 sendgrid
 python-dotenv
+psycopg2-binary
