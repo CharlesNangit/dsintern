@@ -242,9 +242,15 @@ def send_report():
 
     return render_template('send_report.html', recipients=recipients)
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Automatically creates missing tables in PostgreSQL
-    app.run(host='0.0.0.0', port=10000)
+# --- Ensure Tables Exist Even on Render Startup ---
+with app.app_context():
+    try:
+        db.create_all()
+        print("✅ Database tables created or verified successfully.")
+    except Exception as e:
+        print(f"❌ Database initialization error: {e}")
 
+# --- App Entry Point ---
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
 
