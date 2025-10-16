@@ -128,6 +128,19 @@ class EmailRecipient(db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
 
 # --- Admin-only routes ---
+@app.route('/create_admin')
+def create_admin():
+    # Only allow this once, then remove or disable it!
+    existing_admin = User.query.filter_by(role='admin').first()
+    if existing_admin:
+        return "Admin already exists. Delete this route after use."
+
+    hashed_pw = bcrypt.generate_password_hash("DesksideAdmin101").decode('utf-8')
+    admin = User(name="Admin", email="DSAdmin@nexus.com", password=hashed_pw, role="admin")
+    db.session.add(admin)
+    db.session.commit()
+    return "✅ Admin account created!"
+
 @app.route('/manage_emails', methods=['GET', 'POST'])
 @login_required
 def manage_emails():
