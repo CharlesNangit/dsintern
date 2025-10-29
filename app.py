@@ -23,7 +23,7 @@ login_manager.login_view = 'login'
 
 # --- Email Config ---
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
-app.config['MAIL_SENDER'] = "desksideintern@sendgrid.me"  # safer domain for Outlook delivery
+app.config['MAIL_SENDER'] = "desksideintern@dsintern.com"  # safer domain for Outlook delivery
 app.config['MAIL_REPLY_TO'] = "desksideintern@gmail.com"   # where replies go
 
 # --- User Model ---
@@ -235,7 +235,7 @@ def send_report():
 
             for email_addr in selected_emails:
                 message = Mail(
-                    from_email=("desksideintern@sendgrid.me", "Tech Support Team"),  # Trusted domain
+                    from_email=("desksideintern@dsintern.com", "Deskside Intern"),  # Trusted domain
                     to_emails=email_addr,
                     subject=subject,
                     plain_text_content=body
