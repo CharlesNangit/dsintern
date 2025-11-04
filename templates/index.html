@@ -1,67 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome | Intern Portal</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #74ebd5, #ACB6E5);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #333;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InternDesk | Nexus Technologies, Inc.</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100vh;
+      text-align: center;
+      color: #000;
+    }
 
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
+    header {
+      width: 100%;
+      background-color: #2e7d32;
+      padding: 10px 0;
+    }
 
-        p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
+    .logo {
+      margin-top: 30px;
+    }
 
-        .btn-container {
-            display: flex;
-            gap: 20px;
-        }
+    .logo img {
+      max-width: 250px;
+      height: auto;
+    }
 
-        .btn {
-            text-decoration: none;
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: background 0.3s ease;
-        }
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: -40px;
+    }
 
-        .btn:hover {
-            background-color: #45a049;
-        }
+    h1 {
+      font-size: 2.2em;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
 
-        .btn.secondary {
-            background-color: #008CBA;
-        }
+    p {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      max-width: 600px;
+    }
 
-        .btn.secondary:hover {
-            background-color: #007bb5;
-        }
-    </style>
+    .highlight {
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 30px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      background-color: #2e7d32;
+      color: white;
+      text-decoration: none;
+      padding: 12px 40px;
+      border-radius: 40px;
+      font-size: 1.1em;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #256628;
+    }
+
+    footer {
+      background-color: #2e7d32;
+      color: white;
+      width: 100%;
+      padding: 10px 0;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to the Power-On Test Website</h1>
-    <p>Please log in or register to continue.</p>
+
+  <header></header>
+
+  <div class="logo">
+    <img src="{{ url_for('static', filename='nexus_logo.png') }}" alt="Nexus Technologies Logo">
+  </div>
+
+  <main>
+    <h1>InternDesk</h1>
+    <p>A reporting tool for interns to share Power-On Diagnostic test data with engineers.</p>
+    <p class="highlight">Welcome Deskside Interns!</p>
 
     <div class="btn-container">
-        <a href="{{ url_for('login') }}" class="btn">Login</a>
-        <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
+      <a href="{{ url_for('login') }}" class="btn">Log in</a>
+      <a href="{{ url_for('register') }}" class="btn">Register</a>
     </div>
+  </main>
+
+  <footer>
+    Created by Alexis Dallarte and Charles Nangit
+  </footer>
+
 </body>
 </html>
