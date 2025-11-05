@@ -1,116 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InternDesk | Nexus Technologies, Inc.</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #ffffff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      height: 100vh;
-      text-align: center;
-      color: #000;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternDesk | Nexus Technologies</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    header {
-      width: 100%;
-      background-color: #2e7d32;
-      padding: 10px 0;
-    }
+        /* Header bar */
+        header {
+            background-color: #256D1B;
+            padding: 25px 0;
+            text-align: center;
+        }
 
-    .logo {
-      margin-top: 30px;
-    }
+        header img {
+            height: 100px;
+        }
 
-    .logo img {
-      max-width: 250px;
-      height: auto;
-    }
+        /* Center content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
 
-    main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: -40px;
-    }
+        .content h1 {
+            font-size: 2.5em;
+            color: #1a1a1a;
+            margin: 10px 0 15px;
+            font-weight: 600;
+        }
 
-    h1 {
-      font-size: 2.2em;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
+        .content p {
+            max-width: 600px;
+            font-size: 1.15em;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
 
-    p {
-      font-size: 1.1em;
-      margin-bottom: 10px;
-      max-width: 600px;
-    }
+        .welcome {
+            font-weight: 600;
+            color: #256D1B;
+            margin-bottom: 25px;
+        }
 
-    .highlight {
-      font-weight: 600;
-      margin-bottom: 25px;
-    }
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 20px;
+        }
 
-    .btn-container {
-      display: flex;
-      gap: 30px;
-      margin-top: 15px;
-    }
+        .buttons a {
+            text-decoration: none;
+            background-color: #256D1B;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
 
-    .btn {
-      background-color: #2e7d32;
-      color: white;
-      text-decoration: none;
-      padding: 12px 40px;
-      border-radius: 40px;
-      font-size: 1.1em;
-      transition: background 0.3s ease;
-    }
+        .buttons a:hover {
+            background-color: #1b5415;
+            transform: translateY(-2px);
+        }
 
-    .btn:hover {
-      background-color: #256628;
-    }
-
-    footer {
-      background-color: #2e7d32;
-      color: white;
-      width: 100%;
-      padding: 10px 0;
-      font-size: 0.9em;
-    }
-  </style>
+        /* Footer */
+        footer {
+            background-color: #256D1B;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <img src="{{ url_for('static', filename='nexus_logo.png') }}" alt="Nexus Technologies Logo">
+    </header>
 
-  <header></header>
-
-  <div class="logo">
-    <img src="{{ url_for('static', filename='nexus_logo.png') }}" alt="Nexus Technologies Logo">
-  </div>
-
-  <main>
-    <h1>InternDesk</h1>
-    <p>A reporting tool for interns to share Power-On Diagnostic test data with engineers.</p>
-    <p class="highlight">Welcome Deskside Interns!</p>
-
-    <div class="btn-container">
-      <a href="{{ url_for('login') }}" class="btn">Log in</a>
-      <a href="{{ url_for('register') }}" class="btn">Register</a>
+    <div class="content">
+        <h1>InternDesk</h1>
+        <p>
+            A reporting tool for interns to share <strong>Power-On Diagnostic</strong> test data with engineers efficiently and accurately.
+        </p>
+        <p class="welcome">Welcome Deskside Interns!</p>
+        <div class="buttons">
+            <a href="/login">Log in</a>
+            <a href="/register">Register</a>
+        </div>
     </div>
-  </main>
 
-  <footer>
-    Created by Alexis Dallarte and Charles Nangit
-  </footer>
-
+    <footer>
+        Created by Alexis Dallarte and Charles Nangit
+    </footer>
 </body>
 </html>
