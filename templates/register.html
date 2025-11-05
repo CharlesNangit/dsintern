@@ -2,38 +2,152 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Intern Register</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header and Footer */
+        header, footer {
+            background-color: #43A047;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        footer {
+            margin-top: auto;
+        }
+
+        /* Center form container */
+        .container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .form-box h2 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border: 2px solid #000;
+            border-radius: 25px;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        input[readonly] {
+            background-color: #f3f3f3;
+            cursor: not-allowed;
+        }
+
+        button {
+            background-color: #43A047;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #2e7d32;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #43A047;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Flash messages */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            color: red;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Register</h2>
 
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li><strong>{{ category }}:</strong> {{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    <header>
+        <h1>InternDesk</h1>
+        <span>Intern Register</span>
+    </header>
 
-    <form method="POST">
-        <label>Name:</label>
-        <input type="text" name="name" required><br>
+    <div class="container">
+        <div class="form-box">
+            <h2>Register</h2>
 
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <ul>
+                  {% for category, message in messages %}
+                    <li><strong>{{ category }}:</strong> {{ message }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
 
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
+            <form method="POST">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="email" name="email" value="desksideintern@gmail.com" readonly>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
 
-        <!-- 🔒 Removed the role dropdown -->
-        <!-- The app.py will automatically assign role='intern' -->
+            <a href="{{ url_for('login') }}" class="back-link">Back to login</a>
+        </div>
+    </div>
 
-        <button type="submit">Register</button>
-    </form>
+    <footer></footer>
 
-    <a href="{{ url_for('login') }}">Back to login</a>
 </body>
 </html>

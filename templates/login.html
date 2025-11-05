@@ -3,33 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Intern Log in | InternDesk</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background-color: #256D1B;
+            color: white;
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1, header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 1.8em;
+        }
+
+        header h2 {
+            font-size: 1.2em;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        /* Flash messages */
+        .messages {
+            margin-bottom: 15px;
+            color: red;
+            font-size: 0.9em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1.5px solid #333;
+            font-size: 1em;
+            outline: none;
+        }
+
+        button {
+            background-color: #256D1B;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+            align-self: center;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background-color: #1b5415;
+            transform: translateY(-2px);
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 1em;
+        }
+
+        a {
+            color: #256D1B;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            padding: 10px 0;
+        }
+    </style>
 </head>
 <body>
-    <h2>Login</h2>
-    
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li><strong>{{ category }}:</strong> {{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    
-    <!-- Login Form -->
-    <form action="{{ url_for('login') }}" method="POST">
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+    <header>
+        <h1>InternDesk</h1>
+        <h2>Intern Log in</h2>
+    </header>
 
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
+    <div class="content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="messages">
+              {% for category, message in messages %}
+                <p><strong>{{ category.capitalize() }}:</strong> {{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
 
-        <button type="submit">Login</button>
-    </form>
+        <!-- Login Form -->
+        <form action="{{ url_for('login') }}" method="POST">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
 
-    <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Log in</button>
+        </form>
+
+        <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here!</a></p>
+    </div>
+
+    <footer>
+        Created by Alexis Dallarte and Charles Nangit
+    </footer>
 </body>
 </html>
