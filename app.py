@@ -80,12 +80,20 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
 
-        print(f"🟩 Received Login Data:\nEmail: {email}\nPassword: {password}")
+        print(f"🟩 Received Login Data:\nName: {name}\nEmail: {email}\nPassword: {password}")
 
-        user = User.query.filter(User.email.like(f"%{email}%")).first()
+        if email == SHARED_INTERN_EMAIL:
+            # Intern login: match by name + shared email
+            unique_email = f"{name.lower()}_{email}"
+            user = User.query.filter_by(email=unique_email).first()
+        else:
+            # Admin login: use their actual email
+            user = User.query.filter_by(email=email).first()
+
         print(f"🟩 User Found: {user}")
 
         if user and bcrypt.check_password_hash(user.password, password):
@@ -100,6 +108,8 @@ def login():
             flash('Invalid login credentials', 'danger')
 
     return render_template('login.html')
+
+
 
 @app.route('/admin_dashboard')
 @login_required
