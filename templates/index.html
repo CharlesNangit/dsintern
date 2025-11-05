@@ -14,15 +14,11 @@
             min-height: 100vh;
         }
 
-        /* Header bar */
-        header {
+        /* Header and Footer bars */
+        header, footer {
             background-color: #256D1B;
-            padding: 25px 0;
-            text-align: center;
-        }
-
-        header img {
-            height: 100px;
+            height: 40px;
+            width: 100%;
         }
 
         /* Center content */
@@ -33,25 +29,31 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 20px;
+            padding: 40px 20px;
+        }
+
+        .content img {
+            height: 120px;
+            margin-bottom: 20px;
         }
 
         .content h1 {
-            font-size: 2.5em;
+            font-size: 3em;
             color: #1a1a1a;
-            margin: 10px 0 15px;
-            font-weight: 600;
+            margin: 0 0 15px;
+            font-weight: 700;
         }
 
-        .content p {
-            max-width: 600px;
-            font-size: 1.15em;
+        .content p.description {
+            max-width: 700px;
+            font-size: 1.2em;
             color: #333;
             line-height: 1.6;
-            margin-bottom: 25px;
+            margin: 0 0 20px;
         }
 
-        .welcome {
+        .content p.welcome {
+            font-size: 1.1em;
             font-weight: 600;
             color: #256D1B;
             margin-bottom: 25px;
@@ -60,14 +62,16 @@
         /* Buttons */
         .buttons {
             display: flex;
-            gap: 20px;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .buttons a {
             text-decoration: none;
             background-color: #256D1B;
             color: white;
-            padding: 10px 25px;
+            padding: 12px 35px;
             border-radius: 25px;
             font-size: 1em;
             font-weight: 500;
@@ -79,9 +83,7 @@
             transform: translateY(-2px);
         }
 
-        /* Footer */
         footer {
-            background-color: #256D1B;
             color: white;
             text-align: center;
             padding: 10px 0;
@@ -90,14 +92,13 @@
     </style>
 </head>
 <body>
-    <header>
-        <img src="{{ url_for('static', filename='nexus_logo.png') }}" alt="Nexus Technologies Logo">
-    </header>
+    <header></header>
 
     <div class="content">
+        <img src="{{ url_for('static', filename='nexus_logo.png') }}" alt="Nexus Technologies Logo">
         <h1>InternDesk</h1>
-        <p>
-            A reporting tool for interns to share <strong>Power-On Diagnostic</strong> test data with engineers efficiently and accurately.
+        <p class="description">
+            A reporting tool for interns to share <strong>Power-On Diagnostic</strong> test data with engineers.
         </p>
         <p class="welcome">Welcome Deskside Interns!</p>
         <div class="buttons">
