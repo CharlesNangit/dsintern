@@ -1,357 +1,498 @@
-<!-- templates/send_report.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Send Report | InternDesk</title>
-<style>
-  /* Base / header styles (same look as your login template) */
-  :root {
-    --green: #256D1B;
-    --green-dark: #1b5415;
-    --muted: #f6f7f8;
-    --card-bg: #ffffff;
-    --radius: 25px;
-    --max-width: 920px;
-  }
-  html,body{height:100%;margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#ffffff;color:#222;}
-  header, footer{background:var(--green);color:#fff;padding:12px 30px;display:flex;align-items:center;justify-content:space-between;}
-  header h1{margin:0;font-size:1.6em;font-weight:600}
-  header h2{margin:0;font-size:1.05em;font-weight:500;opacity:0.95}
-  .page {padding:28px 16px; display:flex; justify-content:center;}
-  .card {width:100%; max-width:var(--max-width); background:var(--card-bg); border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.06); padding:22px; box-sizing:border-box;}
-  .row {display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;}
-  .col {flex:1 1 300px; min-width:240px;}
-  label {display:block; margin-bottom:6px; font-weight:600; font-size:0.95rem; color:#222;}
-  input[type="text"], input[type="email"], textarea, select {
-    width:100%; padding:12px 14px; border-radius:var(--radius); border:1.5px solid #333; font-size:1rem; outline:none; box-sizing:border-box;
-  }
-  textarea {min-height:110px; resize:vertical; padding-top:10px;}
-  .subject-row {display:flex; gap:12px; align-items:center; margin-bottom:12px;}
-  .chips {display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
-  .chip {background:#f1f1f1; padding:6px 10px; border-radius:999px; display:inline-flex; gap:8px; align-items:center; font-size:0.95rem;}
-  .chip .x {cursor:pointer; font-weight:700; padding-left:6px; color:#666;}
-  .dropdown {position:relative;}
-  .dd-selected {border-radius:var(--radius); padding:10px 12px; border:1.5px solid #333; cursor:pointer; display:flex; justify-content:space-between; align-items:center;}
-  .dd-list {position:absolute; left:0; right:0; top:calc(100% + 8px); background:#fff; border:1px solid #ddd; max-height:220px; overflow:auto; z-index:40; box-shadow:0 8px 20px rgba(0,0,0,0.08); padding:8px; border-radius:8px; display:none;}
-  .dd-list label{display:block; padding:8px 6px; cursor:pointer; font-size:0.95rem;}
-  .dd-list label:hover{background:#f6f6f6}
-  .actions {display:flex; gap:12px; margin-top:16px; align-items:center;}
-  button.primary {background:var(--green); color:#fff; border:none; padding:12px 24px; border-radius:999px; font-weight:600; cursor:pointer;}
-  button.primary:hover{background:var(--green-dark)}
-  button.ghost {background:transparent;border:1px solid #bbb;padding:10px 18px;border-radius:999px;cursor:pointer}
-  .u-muted {color:#666;font-size:0.95rem}
-  .image-area {border:2px dashed #ddd; padding:14px; border-radius:10px; text-align:center; cursor:pointer; background:#fafafa}
-  .image-area.dragover {border-color:var(--green); background:#f8fff8}
-  .preview {margin-top:12px; max-width:100%; border-radius:8px; border:1px solid #ddd}
-  .small {font-size:0.9rem}
-  .table-preview {margin-top:18px;}
-  /* responsive */
-  @media (max-width:600px){ header h1{font-size:1.2em} header h2{font-size:0.95em} .row{flex-direction:column} }
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Send Report | InternDesk</title>
+
+    <style>
+        /* --- Theme (matches your login template) --- */
+        :root {
+            --brand: #256D1B;
+            --brand-dark: #1b5415;
+            --muted: #666;
+            --card-bg: #fff;
+            --radius: 25px;
+            --max-width: 900px;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #222;
+        }
+
+        header, footer {
+            background-color: var(--brand);
+            color: #fff;
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.8em; font-weight: 600; }
+        header h2 { margin: 0; font-size: 1.1em; font-weight: 600; opacity: 0.95; }
+
+        .page {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: var(--max-width);
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+        }
+
+        h2.title {
+            margin: 0 0 12px 0;
+            font-size: 1.4rem;
+        }
+
+        .row {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1 1 280px;
+            min-width: 240px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        .select-box {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius);
+            border: 1.5px solid #333;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .actions {
+            display:flex;
+            gap:12px;
+            align-items:center;
+            margin-top: 14px;
+        }
+
+        button.primary {
+            background: var(--brand);
+            color: #fff;
+            padding: 12px 26px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button.primary:hover { background: var(--brand-dark); }
+
+        button.ghost {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #333;
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        a.back-link {
+            color: var(--brand);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* Recipient multi-select dropdown & chips */
+        .multi-wrapper { position: relative; }
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 20px;
+            border: 1.2px solid #333;
+            cursor: pointer;
+            min-height: 46px;
+        }
+        .chip-list {
+            display:flex;
+            gap:8px;
+            flex-wrap: wrap;
+        }
+        .chip {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:6px 10px;
+            border-radius:18px;
+            background:#f5f5f5;
+            border:1px solid #ddd;
+            font-size:0.9rem;
+        }
+        .chip .x {
+            background: transparent;
+            border: none;
+            font-weight:700;
+            cursor: pointer;
+            padding:0 6px;
+            color:#222;
+        }
+
+        .options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 100%;
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            z-index: 40;
+            display: none;
+        }
+
+        .options label {
+            display:flex;
+            gap:10px;
+            align-items:center;
+            padding:8px 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .options label:hover { background:#f6f8fa; }
+
+        /* Image drop/paste area */
+        .image-area {
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            min-height: 140px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            gap:10px;
+        }
+        .image-area.dragover { border-color: var(--brand); background: #fbfff9; }
+        .image-preview {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .small-muted { color: var(--muted); font-size: 0.9rem; }
+
+        /* Flash */
+        .flash { margin-bottom:12px; color: #b71c1c; font-weight:600; }
+
+        /* responsive */
+        @media (max-width:720px) {
+            .row { flex-direction: column; }
+            header, footer { padding: 12px 18px; }
+        }
+    </style>
 </head>
 <body>
-  <header>
+
+<header>
     <h1>InternDesk</h1>
     <h2>Send Report</h2>
-  </header>
+</header>
 
-  <div class="page">
-    <div class="card" role="main">
+<div class="page">
+    <div class="card">
 
-      <!-- Flash block (keeps logic same; Flask will render messages into page if any) -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div style="margin-bottom:12px;">
-            {% for category, message in messages %}
-              <div style="padding:10px;border-radius:8px;background:#fff6f6;color:#8a1f1f;margin-bottom:6px;"><strong>{{ category.capitalize() }}:</strong> {{ message }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
+        <h2 class="title">Submit Power-On / Diagnostic Report</h2>
 
-      <form id="sendForm" action="{{ url_for('send_report') }}" method="POST" onsubmit="return prepareAndValidate(event)">
-        <!-- recipients + subject -->
-        <div class="row">
-          <div class="col">
-            <label for="recipients-dd">Recipients</label>
-            <div class="dropdown" id="recipientsDropdown">
-              <div class="dd-selected" id="ddSelected">Select recipients</div>
-              <div class="dd-list" id="ddList" aria-hidden="true">
-                {% for r in recipients %}
-                  <label><input type="checkbox" class="r-cb" value="{{ r.email }}"> {{ r.email }}</label>
-                {% endfor %}
-                {% if recipients|length == 0 %}
-                  <div class="small u-muted">No stored recipients. Ask admin to add emails.</div>
-                {% endif %}
-              </div>
+        <!-- Flash messages (Flask will render messages here) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash">
+              {% for category, message in messages %}
+                <div><strong>{{ category.capitalize() }}:</strong> {{ message }}</div>
+              {% endfor %}
             </div>
-            <div class="chips" id="selectedChips" aria-live="polite"></div>
-            <div class="small u-muted" style="margin-top:8px;">Click a recipient to add — click × on a chip to remove.</div>
-          </div>
+          {% endif %}
+        {% endwith %}
 
-          <div class="col">
-            <label for="subject">Subject</label>
-            <input id="subject" name="subject" type="text" placeholder="Subject (e.g. Power-On Test Report — Device XYZ)" required>
-          </div>
-        </div>
+        <form id="reportForm" action="{{ url_for('send_report') }}" method="POST" onsubmit="return onSubmit()" novalidate>
+            <!-- recipients -->
+            <div style="margin-bottom:14px;">
+                <label>Recipients</label>
+                <div class="multi-wrapper">
+                    <div class="dropdown-toggle" id="dropdownToggle" onclick="toggleOptions(event)">
+                        <div class="chip-list" id="chipList">
+                            <span class="small-muted">Select recipients</span>
+                        </div>
+                        <div style="margin-left:auto;color:var(--muted);font-size:0.95rem;">▾</div>
+                    </div>
 
-        <!-- main diagnostic fields -->
-        <div style="margin-top:16px;">
-          <div class="row">
-            <div class="col">
-              <label for="model">Model Name</label>
-              <input id="model" name="model" type="text" placeholder="e.g. Dell OptiPlex 7080" required>
+                    <div class="options" id="optionsBox" aria-hidden="true">
+                        {% for r in recipients %}
+                        <label>
+                            <input type="checkbox" name="recipients" value="{{ r.email }}" class="recipient-checkbox" />
+                            <span style="font-size:0.95rem;">{{ r.email }}</span>
+                        </label>
+                        {% else %}
+                        <div style="padding:10px;color:var(--muted)">No recipients stored yet.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="small-muted" style="margin-top:6px;">Select one or more engineers from the pool (click × on a chip to remove).</div>
             </div>
-            <div class="col">
-              <label for="processor">Processor</label>
-              <input id="processor" name="processor" type="text" placeholder="e.g. Intel i5-10500" required>
+
+            <div class="row">
+                <div class="col">
+                    <label for="subject">Subject</label>
+                    <input id="subject" name="subject" type="text" placeholder="e.g. Power-on test — Unit A15" />
+
+                    <label for="model" style="margin-top:12px">Model</label>
+                    <input id="model" name="model" type="text" placeholder="Device model" />
+
+                    <label for="processor" style="margin-top:12px">Processor</label>
+                    <input id="processor" name="processor" type="text" placeholder="CPU/Processor" />
+                </div>
+
+                <div class="col">
+                    <label for="ram">RAM</label>
+                    <input id="ram" name="ram" type="text" placeholder="e.g. 8GB DDR4" />
+
+                    <label for="storage" style="margin-top:12px">Storage</label>
+                    <input id="storage" name="storage" type="text" placeholder="e.g. 256GB SSD" />
+
+                    <label for="body" style="margin-top:12px">Diagnostic Result</label>
+                    <textarea id="body" name="body" placeholder="Write the diagnostic details / test observations here..."></textarea>
+                </div>
             </div>
-          </div>
 
-          <div class="row" style="margin-top:12px;">
-            <div class="col">
-              <label for="ram">RAM</label>
-              <input id="ram" name="ram" type="text" placeholder="e.g. 16GB DDR4" required>
+            <div style="margin-top:14px;">
+                <label>Attach image (drag & drop, paste image, or click to browse)</label>
+                <div id="imageArea" class="image-area">
+                    <div id="imageControls">
+                        <input id="fileInput" type="file" accept="image/*" style="display:none" />
+                        <button type="button" class="ghost" onclick="triggerFile()">Choose image</button>
+                        <div class="small-muted">Or paste an image (Ctrl+V) / drag & drop it here.</div>
+                    </div>
+
+                    <div id="previewWrap" style="display:none;">
+                        <img id="imagePreview" class="image-preview" src="" alt="Preview" />
+                        <div style="margin-top:8px;">
+                            <button type="button" class="ghost" onclick="removeImage()">Remove image</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="image_base64" id="image_base64" />
             </div>
-            <div class="col">
-              <label for="storage">Storage</label>
-              <input id="storage" name="storage" type="text" placeholder="e.g. 512GB SSD" required>
+
+            <div class="actions">
+                <button type="submit" class="primary">Send Report</button>
+                <button type="button" class="ghost" id="resetBtn">Return to Default</button>
+                <a class="back-link" href="{{ url_for('intern_dashboard') }}">⬅ Back to Dashboard</a>
             </div>
-          </div>
-
-          <div class="row" style="margin-top:12px;">
-            <div class="col">
-              <label for="os">Operating System</label>
-              <input id="os" name="os" type="text" placeholder="e.g. Windows 11 Pro" required>
-            </div>
-            <div class="col">
-              <label for="remarks">Remarks / Diagnostic Summary</label>
-              <textarea id="remarks" name="remarks" placeholder="Short diagnostic summary (what you checked, findings)..." required></textarea>
-            </div>
-          </div>
-        </div>
-
-        <!-- image area -->
-        <div style="margin-top:16px;">
-          <label>Attach / Paste Image (optional)</label>
-          <div id="imageArea" class="image-area" tabindex="0">
-            <div class="small u-muted">Drag & drop an image, click to select, or paste from clipboard (Ctrl+V)</div>
-            <img id="imgPreview" class="preview" style="display:none;" alt="preview">
-          </div>
-        </div>
-
-        <!-- live table preview -->
-        <div class="table-preview" id="tablePreview" aria-live="polite"></div>
-
-        <!-- hidden fields expected by Flask -->
-        <input type="hidden" name="image_base64" id="image_base64" value="">
-        <textarea name="body" id="body" style="display:none;"></textarea>
-
-        <!-- action buttons -->
-        <div class="actions" style="justify-content:space-between;">
-          <div>
-          </div>
-          <div>
-            <button type="submit" class="primary">Send Report</button>
-          </div>
-        </div>
-      </form>
+        </form>
     </div>
-  </div>
+</div>
 
-  <footer></footer>
+<footer></footer>
 
 <script>
-/* Dropdown + chips logic */
-const ddSelected = document.getElementById('ddSelected');
-const ddList = document.getElementById('ddList');
-const recipientsDropdown = document.getElementById('recipientsDropdown');
-const selectedChips = document.getElementById('selectedChips');
+    /***** Recipients dropdown + chips *****/
+    const dropdownToggle = document.getElementById('dropdownToggle');
+    const optionsBox = document.getElementById('optionsBox');
+    const chipList = document.getElementById('chipList');
 
-ddSelected.addEventListener('click', () => {
-  ddList.style.display = (ddList.style.display === 'block') ? 'none' : 'block';
-  ddList.setAttribute('aria-hidden', ddList.style.display !== 'block');
-});
+    function toggleOptions(e) {
+        // prevent form submit if inside button clickable area
+        optionsBox.style.display = optionsBox.style.display === 'block' ? 'none' : 'block';
+    }
 
-document.addEventListener('click', (e) => {
-  if (!recipientsDropdown.contains(e.target)) {
-    ddList.style.display = 'none';
-    ddList.setAttribute('aria-hidden', 'true');
-  }
-});
-
-function updateChips() {
-  selectedChips.innerHTML = '';
-  const checked = Array.from(document.querySelectorAll('.r-cb:checked')).map(cb => cb.value);
-  if (checked.length === 0) {
-    ddSelected.textContent = 'Select recipients';
-    return;
-  }
-  ddSelected.textContent = checked.join(', ');
-  checked.forEach(email => {
-    const chip = document.createElement('span');
-    chip.className = 'chip';
-    chip.innerHTML = `${email} <span class="x" aria-hidden="true">×</span>`;
-    chip.querySelector('.x').addEventListener('click', () => {
-      // uncheck the checkbox
-      document.querySelectorAll('.r-cb').forEach(cb => { if (cb.value === email) cb.checked = false; });
-      updateChips();
+    document.addEventListener('click', (e) => {
+        if (!document.querySelector('.multi-wrapper').contains(e.target)) {
+            optionsBox.style.display = 'none';
+        }
     });
-    selectedChips.appendChild(chip);
-  });
-}
 
-document.querySelectorAll('.r-cb').forEach(cb => {
-  cb.addEventListener('change', updateChips);
-});
-
-/* Image handling: paste, drag/drop, and file select */
-const imageArea = document.getElementById('imageArea');
-const imgPreview = document.getElementById('imgPreview');
-const imageBase64Input = document.getElementById('image_base64');
-
-imageArea.addEventListener('click', () => {
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/*';
-  fileInput.onchange = () => {
-    const file = fileInput.files[0];
-    if (file) readFileToDataURL(file);
-  };
-  fileInput.click();
-});
-
-imageArea.addEventListener('dragover', (e) => { e.preventDefault(); imageArea.classList.add('dragover'); });
-imageArea.addEventListener('dragleave', () => { imageArea.classList.remove('dragover'); });
-imageArea.addEventListener('drop', (e) => {
-  e.preventDefault(); imageArea.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) readFileToDataURL(file);
-});
-
-document.addEventListener('paste', (e) => {
-  const items = e.clipboardData && e.clipboardData.items;
-  if (!items) return;
-  for (let i = 0; i < items.length; i++) {
-    const it = items[i];
-    if (it.type.indexOf('image') !== -1) {
-      const file = it.getAsFile();
-      readFileToDataURL(file);
-      e.preventDefault();
-      break;
+    function rebuildChips() {
+        const checked = Array.from(document.querySelectorAll('.recipient-checkbox:checked'));
+        chipList.innerHTML = '';
+        if (checked.length === 0) {
+            const placeholder = document.createElement('span');
+            placeholder.className = 'small-muted';
+            placeholder.textContent = 'Select recipients';
+            chipList.appendChild(placeholder);
+            return;
+        }
+        checked.forEach(cb => {
+            const chip = document.createElement('span');
+            chip.className = 'chip';
+            chip.dataset.value = cb.value;
+            chip.innerHTML = `<span style="font-size:0.92rem;">${cb.value}</span>`;
+            const xbtn = document.createElement('button');
+            xbtn.type = 'button';
+            xbtn.className = 'x';
+            xbtn.innerText = '×';
+            xbtn.title = 'Remove';
+            xbtn.onclick = (ev) => {
+                ev.stopPropagation();
+                cb.checked = false;
+                rebuildChips();
+            };
+            chip.appendChild(xbtn);
+            chipList.appendChild(chip);
+        });
     }
-  }
-});
 
-function readFileToDataURL(file) {
-  const reader = new FileReader();
-  reader.onload = () => {
-    const data = reader.result;
-    imgPreview.src = data;
-    imgPreview.style.display = 'block';
-    imageBase64Input.value = data;
-  };
-  reader.readAsDataURL(file);
-}
+    // attach listeners to checkboxes (existing ones)
+    document.querySelectorAll('.recipient-checkbox').forEach(cb => {
+        cb.addEventListener('change', () => {
+            rebuildChips();
+        });
+    });
 
-/* build HTML table for email body and preview */
-function buildReportHTML() {
-  const internName = "{{ current_user.name|e }}" || '';
-  const internEmail = "{{ current_user.email|e }}" || '';
-  const model = document.getElementById('model').value.trim();
-  const processor = document.getElementById('processor').value.trim();
-  const ram = document.getElementById('ram').value.trim();
-  const storage = document.getElementById('storage').value.trim();
-  const os = document.getElementById('os').value.trim();
-  const remarks = document.getElementById('remarks').value.trim();
-  const imageData = imageBase64Input.value;
+    // init chips on load (in case some checkboxes were pre-checked)
+    rebuildChips();
 
-  const tableHTML = `
-    <div style="font-family:Arial, sans-serif;color:#222">
-      <h3 style="margin-bottom:6px;color:#333">Deskside Diagnostic Report</h3>
-      <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:700px;">
-        <tr style="background:#f8f9fa;"><th align="left">Intern Name</th><td>${escapeHtml(internName)}</td></tr>
-        <tr><th align="left">Intern Email</th><td>${escapeHtml(internEmail)}</td></tr>
-        <tr style="background:#f8f9fa;"><th align="left">Model Name</th><td>${escapeHtml(model)}</td></tr>
-        <tr><th align="left">Processor</th><td>${escapeHtml(processor)}</td></tr>
-        <tr style="background:#f8f9fa;"><th align="left">RAM</th><td>${escapeHtml(ram)}</td></tr>
-        <tr><th align="left">Storage</th><td>${escapeHtml(storage)}</td></tr>
-        <tr style="background:#f8f9fa;"><th align="left">Operating System</th><td>${escapeHtml(os)}</td></tr>
-        <tr><th align="left">Remarks</th><td>${escapeHtml(remarks)}</td></tr>
-      </table>
-      ${imageData ? `<div style="margin-top:12px;"><strong>Attached Image:</strong><br><img src="${imageData}" style="max-width:100%;border:1px solid #ccc;border-radius:8px;"></div>` : ''}
-    </div>
-  `;
-  return tableHTML;
-}
+    /***** Image paste / drag & drop / file read -> base64 *****/
+    const imageArea = document.getElementById('imageArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewWrap = document.getElementById('previewWrap');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageBase64Input = document.getElementById('image_base64');
 
-/* Escape helper for safe preview in DOM */
-function escapeHtml(unsafe) {
-  return unsafe
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-/* update preview live while typing */
-['model','processor','ram','storage','os','remarks'].forEach(id => {
-  const el = document.getElementById(id);
-  el && el.addEventListener('input', () => {
-    document.getElementById('tablePreview').innerHTML = buildReportHTML();
-  });
-});
-imgPreview.addEventListener('load', () => { document.getElementById('tablePreview').innerHTML = buildReportHTML(); });
-
-/* final prepare & validation triggered on submit */
-function prepareAndValidate(e) {
-  // collect selected recipients
-  const checkedBoxes = Array.from(document.querySelectorAll('.r-cb:checked'));
-  if (checkedBoxes.length === 0) {
-    alert('Please select at least one recipient.');
-    e.preventDefault();
-    return false;
-  }
-
-  // subject
-  const subj = document.getElementById('subject').value.trim();
-  if (!subj) { alert('Please enter a subject.'); e.preventDefault(); return false; }
-
-  // required diagnostic fields
-  const requiredIds = ['model','processor','ram','storage','os','remarks'];
-  for (let id of requiredIds) {
-    if (!document.getElementById(id).value.trim()) {
-      alert('Please fill in all diagnostic fields before sending.');
-      e.preventDefault();
-      return false;
+    function triggerFile() {
+        fileInput.click();
     }
-  }
 
-  // set hidden recipients inputs (multiple inputs with same name)
-  // remove any old hidden inputs first
-  document.querySelectorAll('input[name="recipients"][type="hidden"]').forEach(n => n.remove());
-  checkedBoxes.forEach(cb => {
-    const h = document.createElement('input');
-    h.type = 'hidden';
-    h.name = 'recipients';
-    h.value = cb.value;
-    document.getElementById('sendForm').appendChild(h);
-  });
+    fileInput.addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if (f) readFileAsDataURL(f);
+    });
 
-  // build body (HTML) and set it
-  const bodyHtml = buildReportHTML();
-  document.getElementById('body').value = bodyHtml;
+    function readFileAsDataURL(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const dataUrl = reader.result;
+            showPreview(dataUrl);
+        };
+        reader.readAsDataURL(file);
+    }
 
-  // image_base64 already set when image chosen/pasted
-  // allow submit to continue
-  return true;
-}
+    function showPreview(dataUrl) {
+        imagePreview.src = dataUrl;
+        imageBase64Input.value = dataUrl;
+        previewWrap.style.display = 'block';
+        document.getElementById('imageControls').style.display = 'none';
+    }
 
-/* initial preview */
-document.getElementById('tablePreview').innerHTML = buildReportHTML();
+    function removeImage() {
+        imagePreview.src = '';
+        imageBase64Input.value = '';
+        previewWrap.style.display = 'none';
+        document.getElementById('imageControls').style.display = 'block';
+        fileInput.value = '';
+    }
+
+    // drag & drop
+    imageArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imageArea.classList.add('dragover');
+    });
+    imageArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imageArea.classList.remove('dragover');
+    });
+    imageArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imageArea.classList.remove('dragover');
+        const f = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) || null;
+        if (f) readFileAsDataURL(f);
+    });
+
+    // paste image
+    window.addEventListener('paste', (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (item.type.indexOf('image') !== -1) {
+                const blob = item.getAsFile();
+                readFileAsDataURL(blob);
+                return;
+            }
+        }
+    });
+
+    /***** Return to Default button: resets form fields & image preview but keeps recipients checked *****/
+    const resetBtn = document.getElementById('resetBtn');
+    resetBtn.addEventListener('click', () => {
+        // fields to reset
+        document.getElementById('subject').value = '';
+        document.getElementById('model').value = '';
+        document.getElementById('processor').value = '';
+        document.getElementById('ram').value = '';
+        document.getElementById('storage').value = '';
+        document.getElementById('body').value = '';
+        removeImage();
+
+        // keep recipients as-is, so do NOT touch checkboxes
+        // focus subject
+        document.getElementById('subject').focus();
+    });
+
+    /***** client-side validate & ensure checkboxes are present as multiple inputs (they already are) *****/
+    function onSubmit() {
+        // build list of checked recipients
+        const checked = Array.from(document.querySelectorAll('.recipient-checkbox:checked')).map(x => x.value);
+        const subject = document.getElementById('subject').value.trim();
+        const body = document.getElementById('body').value.trim();
+
+        if (checked.length === 0) {
+            alert('Please select at least one recipient from the pool.');
+            return false;
+        }
+        if (!subject) {
+            alert('Please enter a subject.');
+            document.getElementById('subject').focus();
+            return false;
+        }
+        if (!body) {
+            alert('Please fill in the Diagnostic Result (body).');
+            document.getElementById('body').focus();
+            return false;
+        }
+
+        // OK to submit
+        return true;
+    }
 </script>
+
 </body>
 </html>

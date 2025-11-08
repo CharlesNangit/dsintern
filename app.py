@@ -234,29 +234,43 @@ def send_report():
     if request.method == 'POST':
         selected_emails = request.form.getlist('recipients')
         subject = request.form.get('subject')
+        model = request.form.get('model')
+        processor = request.form.get('processor')
+        ram = request.form.get('ram')
+        storage = request.form.get('storage')
         body = request.form.get('body')
         image_base64 = request.form.get('image_base64')
 
+        # Validate all required fields
         if not selected_emails or not subject or not body:
             flash('Please fill in all fields before sending.', 'warning')
             return redirect(url_for('send_report'))
 
-        # Create HTML table for the report
+        # Build HTML email body (table only)
         html_content = f"""
         <html>
-        <body style="font-family:Arial, sans-serif;">
-          <h3 style="color:#333;">Deskside Diagnostic Report</h3>
-          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:600px;">
-            <tr style="background-color:#f8f9fa;"><th>Intern Name</th><td>{current_user.name}</td></tr>
-            <tr><th>Email</th><td>{current_user.email}</td></tr>
-            <tr><th>Diagnostic Result</th><td>{body}</td></tr>
-          </table>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#333;">
+          <table border="1" cellpadding="10" cellspacing="0" 
+                 style="border-collapse: collapse; width: 100%; max-width: 700px; 
+                        border: 1px solid #000; font-size: 15px;">
+            <tr><th align="left" style="background:#f4f4f4;">Intern Name</th><td>{current_user.name}</td></tr>
+            <tr><th align="left" style="background:#f4f4f4;">Model</th><td>{model or 'N/A'}</td></tr>
+            <tr><th align="left" style="background:#f4f4f4;">Processor</th><td>{processor or 'N/A'}</td></tr>
+            <tr><th align="left" style="background:#f4f4f4;">RAM</th><td>{ram or 'N/A'}</td></tr>
+            <tr><th align="left" style="background:#f4f4f4;">Storage</th><td>{storage or 'N/A'}</td></tr>
+            <tr><th align="left" style="background:#f4f4f4;">Diagnostic Result</th><td>{body}</td></tr>
         """
 
         if image_base64:
-            html_content += f'<div style="margin-top:15px;"><strong>Attached Image:</strong><br><img src="{image_base64}" style="max-width:100%;border:1px solid #ccc;border-radius:8px;"></div>'
+            html_content += f"""
+            <tr>
+              <th align="left" style="background:#f4f4f4;">Attached Image</th>
+              <td><img src="{image_base64}" alt="Attached" 
+                       style="max-width:100%; border:1px solid #ccc; border-radius:8px; margin-top:6px;"></td>
+            </tr>
+            """
 
-        html_content += "</body></html>"
+        html_content += "</table></body></html>"
 
         try:
             sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
@@ -272,15 +286,16 @@ def send_report():
                 response = sg.send(message)
                 print(f"📨 Sent to {email_addr} | Status: {response.status_code}")
 
-            flash(f'Report sent successfully to {len(selected_emails)} recipient(s).', 'success')
+            flash(f"Report sent successfully to {len(selected_emails)} recipient(s).", "success")
 
         except Exception as e:
             print(f"❌ Send error: {e}")
-            flash(f'Failed to send emails: {e}', 'danger')
+            flash(f"Failed to send emails: {e}", "danger")
 
         return redirect(url_for('send_report'))
 
     return render_template('send_report.html', recipients=recipients)
+
 
 # --- Ensure Tables Exist Even on Render Startup ---
 with app.app_context():
