@@ -4,48 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Interns</title>
+    <style>
+        /* General Reset */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        header {
+            background-color: #3b9b3b;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        header h2 {
+            font-size: 20px;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        /* Page Content */
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        /* Table Styling */
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            border: 2px solid #000000;
+            text-align: center;
+            padding: 12px;
+            font-size: 18px;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #d3d3d3;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #bcbcbc;
+        }
+
+        .back-btn {
+            background-color: #3b9b3b;
+            color: white;
+            padding: 12px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background-color: #338633;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #3b9b3b;
+            height: 35px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h2>Manage Interns</h2>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li><strong>{{ category }}:</strong> {{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    <!-- Header -->
+    <header>
+        <h1>InternDesk</h1>
+        <h2>Admin Dashboard</h2>
+    </header>
 
-    <!-- Intern Table -->
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for intern in interns %}
-            <tr>
-                <td>{{ intern.name }}</td>
-                <td>{{ intern.email }}</td>
-                <td>
-                    <form action="{{ url_for('delete_intern', id=intern.id) }}" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Delete this intern?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% else %}
-            <tr><td colspan="3">No interns registered yet.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Main Section -->
+    <main>
+        <h2>Manage Interns</h2>
 
-    <br>
-    <a href="{{ url_for('admin_dashboard') }}">⬅ Back to Dashboard</a>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul>
+              {% for category, message in messages %}
+                <li><strong>{{ category }}:</strong> {{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        <!-- Intern Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for intern in interns %}
+                <tr>
+                    <td>{{ intern.name }}</td>
+                    <td>{{ intern.email }}</td>
+                    <td>
+                        <form action="{{ url_for('delete_intern', id=intern.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Delete this intern?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3">No interns registered yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-btn">Back to Dashboard</a>
+    </main>
+
+    <!-- Footer -->
+    <footer></footer>
+
 </body>
 </html>

@@ -2,14 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Intern Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intern Dashboard | InternDesk</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header, footer {
+      background-color: #256D1B;
+      color: white;
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1, header h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    header h1 {
+      font-size: 1.8em;
+    }
+
+    header h2 {
+      font-size: 1.2em;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      font-size: 1.6em;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    h3 {
+      font-size: 1.3em;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1em;
+      margin: 5px 0;
+      line-height: 1.5;
+    }
+
+    .buttons {
+      margin-top: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      background-color: #256D1B;
+      color: white;
+      border: none;
+      padding: 12px 35px;
+      border-radius: 25px;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background-color: #1b5415;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      font-size: 0.9em;
+      padding: 10px 0;
+    }
+  </style>
 </head>
 <body>
-  <h2>Welcome, {{ user.name }} (Intern)</h2>
-  <p>Submit your reports and choose recipients from the engineer email pool.</p>
+  <header>
+    <h1>InternDesk</h1>
+    <h2>Intern Dashboard</h2>
+  </header>
 
-  <p><a href="{{ url_for('send_report') }}">📧 Send Report</a></p>
+  <div class="content">
+    <h2>Welcome, {{ user.name }}!</h2>
 
-  <a href="{{ url_for('logout') }}">Logout</a>
+    <h3>Reminders</h3>
+    <p>Do not spam reports to engineer’s emails</p>
+    <p>Be mindful of the time, only send report emails on work hours 8:30AM to 6:00PM PHT</p>
+    <p>Make sure you selected the correct engineer email to receive the report you are sending</p>
+    <p>Inform the engineers within Nexus Center when your report email is sent</p>
+
+    <div class="buttons">
+      <a href="{{ url_for('send_report') }}" class="btn">Send Report</a>
+      <a href="{{ url_for('logout') }}" class="btn">Log out</a>
+    </div>
+  </div>
+
+  <footer></footer>
 </body>
 </html>

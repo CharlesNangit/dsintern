@@ -1,25 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | InternDesk</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header, footer {
+      background-color: #256D1B;
+      color: white;
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1, header h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    header h1 {
+      font-size: 1.8em;
+    }
+
+    header h2 {
+      font-size: 1.2em;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      font-size: 1.6em;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.3em;
+      margin-top: 20px;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      background-color: #256D1B;
+      color: white;
+      border: none;
+      padding: 12px 35px;
+      border-radius: 25px;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background-color: #1b5415;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      font-size: 0.9em;
+      padding: 10px 0;
+    }
+  </style>
 </head>
 <body>
-    <h2>Welcome, {{ user.name }} (Admin)</h2>
+  <header>
+    <h1>InternDesk</h1>
+    <h2>Admin Dashboard</h2>
+  </header>
 
-    <p>What would you like to do?</p>
+  <div class="content">
+    <h2>Welcome, {{ user.name }}!</h2>
+    <h3>Select an action</h3>
 
-    <a href="{{ url_for('manage_emails') }}">
-        <button>Manage Email Pool</button>
-    </a>
+    <div class="buttons">
+      <a href="{{ url_for('manage_interns') }}" class="btn">Manage Intern Accounts</a>
+      <a href="{{ url_for('manage_emails') }}" class="btn">Manage Email Pool</a>
+      <a href="{{ url_for('logout') }}" class="btn">Log out</a>
+    </div>
+  </div>
 
-    <a href="{{ url_for('manage_interns') }}">
-        <button>Manage Interns</button>
-    </a>
-
-    <a href="{{ url_for('logout') }}">
-        <button>Logout</button>
-    </a>
+  <footer></footer>
 </body>
 </html>
