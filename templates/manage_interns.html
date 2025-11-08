@@ -3,104 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Interns</title>
+    <title>Manage Interns | InternDesk</title>
     <style>
-        /* General Reset */
+        /* General Page Setup */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Header */
-        header {
-            background-color: #3b9b3b;
+        /* Header & Footer */
+        header, footer {
+            background-color: #256D1B;
             color: white;
+            padding: 10px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
+        }
+
+        header h1, header h2 {
+            margin: 0;
+            font-weight: 600;
         }
 
         header h1 {
-            font-size: 28px;
-            margin: 0;
+            font-size: 1.8em;
         }
 
         header h2 {
-            font-size: 20px;
-            margin: 0;
-            font-weight: normal;
+            font-size: 1.2em;
         }
 
-        /* Page Content */
+        footer {
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            padding: 10px 0;
+            margin-top: auto;
+        }
+
+        /* Main Content */
         main {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 50px 20px;
         }
 
         h2 {
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 30px;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #000000;
+        }
+
+        /* Flash Messages */
+        .messages {
+            margin-bottom: 15px;
+            color: red;
+            font-size: 0.9em;
         }
 
         /* Table Styling */
         table {
             border-collapse: collapse;
-            width: 60%;
+            width: 80%;
+            max-width: 800px;
             margin-bottom: 40px;
         }
 
         th, td {
-            border: 2px solid #000000;
+            border: 1.5px solid #000;
             text-align: center;
-            padding: 12px;
-            font-size: 18px;
+            padding: 12px 15px;
+            font-size: 1em;
         }
 
         th {
+            background-color: #f5f5f5;
             font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
         }
 
         /* Buttons */
         button {
-            background-color: #d3d3d3;
+            background-color: #256D1B;
+            color: white;
             border: none;
-            border-radius: 8px;
             padding: 8px 20px;
-            font-size: 16px;
+            border-radius: 25px;
+            font-size: 0.95em;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
         }
 
         button:hover {
-            background-color: #bcbcbc;
+            background-color: #1b5415;
+            transform: translateY(-2px);
         }
 
+        /* Back Button */
         .back-btn {
-            background-color: #3b9b3b;
+            background-color: #256D1B;
             color: white;
-            padding: 12px 40px;
-            border-radius: 30px;
+            padding: 12px 35px;
+            border-radius: 25px;
             text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.1s ease;
         }
 
         .back-btn:hover {
-            background-color: #338633;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #3b9b3b;
-            height: 35px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            background-color: #1b5415;
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -119,11 +144,11 @@
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
-            <ul>
+            <div class="messages">
               {% for category, message in messages %}
-                <li><strong>{{ category }}:</strong> {{ message }}</li>
+                <p><strong>{{ category.capitalize() }}:</strong> {{ message }}</p>
               {% endfor %}
-            </ul>
+            </div>
           {% endif %}
         {% endwith %}
 

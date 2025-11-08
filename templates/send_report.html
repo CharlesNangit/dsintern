@@ -1,128 +1,236 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Report</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-container">
+  <div class="form-card">
+    <h2 class="form-title">📨 Send Diagnostic Report</h2>
 
-        select {
-            width: 300px;
-            padding: 5px;
-        }
-
-        .dropdown-container {
-            position: relative;
-            display: inline-block;
-            width: 300px;
-        }
-
-        .dropdown-selected {
-            border: 1px solid #ccc;
-            padding: 8px;
-            cursor: pointer;
-            background-color: white;
-        }
-
-        .dropdown-options {
-            display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            width: 100%;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .dropdown-options label {
-            display: block;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .dropdown-options label:hover {
-            background-color: #f0f0f0;
-        }
-
-        button {
-            padding: 8px 16px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <h2>Send Report</h2>
-
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li><strong>{{ category }}:</strong> {{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-
-    <form action="{{ url_for('send_report') }}" method="POST">
-        <label for="recipient">Select Engineer(s):</label><br>
-
-        <!-- Dropdown multi-select -->
-        <div class="dropdown-container">
-            <div class="dropdown-selected" onclick="toggleDropdown()">Select recipients</div>
-            <div class="dropdown-options">
-                {% for r in recipients %}
-                <label>
-                    <input type="checkbox" name="recipients" value="{{ r.email }}"> {{ r.email }}
-                </label>
-                {% endfor %}
-            </div>
+    <form id="reportForm" method="POST" class="report-form">
+      <!-- Recipients and Subject -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Recipients</label>
+          <div id="recipientsContainer" class="recipient-box">
+            {% for r in recipients %}
+              <div class="recipient-tag">
+                <input type="checkbox" name="recipients" value="{{ r.email }}" checked hidden>
+                {{ r.email }}
+                <span class="remove-recipient">×</span>
+              </div>
+            {% endfor %}
+          </div>
         </div>
-        <br><br>
 
-        <label for="subject">Subject:</label><br>
-        <input type="text" name="subject" required><br><br>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <input type="text" class="form-input" name="subject" placeholder="Enter subject">
+        </div>
 
-        <label for="body">Message:</label><br>
-        <textarea name="body" rows="6" cols="40" required></textarea><br><br>
+        <div class="form-group">
+          <button type="submit" class="btn-primary">Send Report</button>
+        </div>
+      </div>
 
-        <button type="submit">Send Report</button>
+      <!-- Diagnostic Body -->
+      <div class="form-group">
+        <label class="form-label">Diagnostic Result</label>
+        <textarea id="body" name="body" class="form-textarea" placeholder="Type your report here..."></textarea>
+      </div>
+
+      <!-- Image Upload Section -->
+      <div id="dropArea" class="upload-area">
+        <p>📷 Drag & Drop or Paste an image here</p>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+      </div>
+
+      <div id="preview" class="preview-container"></div>
+      <input type="hidden" name="image_base64" id="imageBase64">
     </form>
+  </div>
+</div>
 
-    <p><a href="{{ url_for('intern_dashboard') }}">Back to Dashboard</a></p>
+<style>
+  .content-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    padding: 40px 15px;
+  }
 
-    <script>
-        function toggleDropdown() {
-            const dropdown = document.querySelector('.dropdown-options');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
+  .form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 900px;
+  }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.querySelector('.dropdown-options');
-            const selected = document.querySelector('.dropdown-selected');
-            if (!selected.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
+  .form-title {
+    text-align: center;
+    color: #222;
+    margin-bottom: 25px;
+    font-weight: bold;
+  }
 
-        // Update label text with selected emails
-        const checkboxes = document.querySelectorAll('input[type=checkbox][name=recipients]');
-        const selectedText = document.querySelector('.dropdown-selected');
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', () => {
-                const selectedEmails = Array.from(checkboxes)
-                    .filter(c => c.checked)
-                    .map(c => c.value)
-                    .join(', ');
-                selectedText.textContent = selectedEmails || 'Select recipients';
-            });
-        });
-    </script>
-</body>
-</html>
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .form-input, .form-textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 15px;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-input:focus, .form-textarea:focus {
+    border-color: #000;
+    outline: none;
+  }
+
+  .form-textarea {
+    min-height: 180px;
+    resize: vertical;
+  }
+
+  .recipient-box {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 45px;
+    background-color: #f8f8f8;
+  }
+
+  .recipient-tag {
+    display: inline-block;
+    background-color: #1a1a1a;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 14px;
+    margin: 3px;
+  }
+
+  .remove-recipient {
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ff5555;
+  }
+
+  .upload-area {
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    background: #fafafa;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .upload-area.dragover {
+    background-color: #e0e0e0;
+  }
+
+  .preview-container img {
+    max-width: 100%;
+    border: 2px solid #222;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .btn-primary {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #333;
+  }
+
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+    }
+    .form-group {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("remove-recipient")) {
+      e.target.parentElement.remove();
+    }
+  });
+
+  const dropArea = document.getElementById("dropArea");
+  const fileInput = document.getElementById("fileInput");
+  const preview = document.getElementById("preview");
+  const imageBase64Input = document.getElementById("imageBase64");
+
+  dropArea.addEventListener("click", () => fileInput.click());
+
+  dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.classList.add("dragover");
+  });
+
+  dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("dragover");
+  });
+
+  dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("dragover");
+    handleFile(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
+
+  document.addEventListener("paste", (e) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        handleFile(items[i].getAsFile());
+      }
+    }
+  });
+
+  function handleFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const base64String = e.target.result;
+      preview.innerHTML = `<img src="${base64String}" alt="Preview">`;
+      imageBase64Input.value = base64String;
+    };
+    reader.readAsDataURL(file);
+  }
+</script>
+{% endblock %}

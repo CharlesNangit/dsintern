@@ -235,30 +235,47 @@ def send_report():
         selected_emails = request.form.getlist('recipients')
         subject = request.form.get('subject')
         body = request.form.get('body')
+        image_base64 = request.form.get('image_base64')
 
         if not selected_emails or not subject or not body:
             flash('Please fill in all fields before sending.', 'warning')
             return redirect(url_for('send_report'))
+
+        # Create HTML table for the report
+        html_content = f"""
+        <html>
+        <body style="font-family:Arial, sans-serif;">
+          <h3 style="color:#333;">Deskside Diagnostic Report</h3>
+          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:600px;">
+            <tr style="background-color:#f8f9fa;"><th>Intern Name</th><td>{current_user.name}</td></tr>
+            <tr><th>Email</th><td>{current_user.email}</td></tr>
+            <tr><th>Diagnostic Result</th><td>{body}</td></tr>
+          </table>
+        """
+
+        if image_base64:
+            html_content += f'<div style="margin-top:15px;"><strong>Attached Image:</strong><br><img src="{image_base64}" style="max-width:100%;border:1px solid #ccc;border-radius:8px;"></div>'
+
+        html_content += "</body></html>"
 
         try:
             sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
 
             for email_addr in selected_emails:
                 message = Mail(
-                    from_email=("desksideintern@dsintern.com", "Deskside Intern"),  # Trusted domain
+                    from_email=("desksideintern@dsintern.com", "Deskside Intern"),
                     to_emails=email_addr,
                     subject=subject,
-                    plain_text_content=body
+                    html_content=html_content
                 )
                 message.reply_to = "desksideintern@gmail.com"
                 response = sg.send(message)
-
-                # Log the result in Render logs
                 print(f"📨 Sent to {email_addr} | Status: {response.status_code}")
 
             flash(f'Report sent successfully to {len(selected_emails)} recipient(s).', 'success')
 
         except Exception as e:
+            print(f"❌ Send error: {e}")
             flash(f'Failed to send emails: {e}', 'danger')
 
         return redirect(url_for('send_report'))
