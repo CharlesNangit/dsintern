@@ -1,314 +1,533 @@
+<!-- templates/send_report.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Report | InternDesk</title>
-    <style>
-        /* ===== General Styles ===== */
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Send Report | InternDesk</title>
+<style>
+  /* --- base (matches your login template) --- */
+  :root{
+    --green:#256D1B;
+    --green-dark:#1b5415;
+    --black:#000;
+    --muted:#efefef;
+    --chip-bg:#ffffff;
+  }
+  html,body{height:100%;margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#fff;color:#111;}
+  header, footer{
+    background-color:var(--green);
+    color:white;
+    padding:10px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  header h1, header h2{margin:0;font-weight:600;}
+  header h1{font-size:1.8em}
+  header h2{font-size:1.2em}
 
-        header, footer {
-            background-color: #256D1B;
-            color: white;
-            padding: 10px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  /* page layout */
+  .page {
+    min-height: calc(100vh - 100px);
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+  }
+  .container{
+    flex:1;
+    padding:28px 40px;
+    max-width:1200px;
+    margin:0 auto;
+  }
 
-        header h1, header h2 {
-            margin: 0;
-            font-weight: 600;
-        }
+  h2.page-title{
+    color:var(--green);
+    text-align:center;
+    margin:6px 0 18px;
+    font-weight:600;
+    font-size:1.6rem;
+  }
 
-        header h1 { font-size: 1.8em; }
-        header h2 { font-size: 1.2em; }
+  /* success/error flash */
+  .flash { text-align:center; margin-bottom:12px; }
+  .flash .success { color: #0a6e00; font-weight:600; }
+  .flash .error { color: #c32020; font-weight:600; }
 
-        footer {
-            text-align: center;
-            color: white;
-            font-size: 0.9em;
-            padding: 10px 0;
-        }
+  /* row for top selectors (recipients + subject) */
+  .top-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:16px;
+    align-items:start;
+    margin-bottom:12px;
+  }
+  .label-row{
+    font-weight:700;
+    margin-bottom:8px;
+    text-align:center;
+  }
 
-        /* ===== Page Content ===== */
-        .content {
-            flex: 1;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  /* rounded input look */
+  .rounded-select, .rounded-input {
+    display:block;
+    width:100%;
+    padding:14px 18px;
+    border-radius:28px;
+    background:#e9e9e9;
+    border:2px solid #333;
+    box-sizing:border-box;
+    font-size:1rem;
+    outline:none;
+  }
 
-        h2 {
-            font-size: 1.8em;
-            margin-bottom: 25px;
-            color: #256D1B;
-            font-weight: 600;
-        }
+  /* recipients chips container */
+  .chips-container{
+    margin-top:8px;
+    padding:12px;
+    border-radius:28px;
+    background:#e9e9e9;
+    border:2px solid #333;
+    min-height:56px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .chip {
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:white;
+    border-radius:24px;
+    padding:8px 14px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+    font-size:0.95rem;
+  }
+  .chip .x {
+    color:#c22;
+    margin-left:6px;
+    cursor:pointer;
+    font-weight:700;
+  }
 
-        /* Flash messages */
-        .messages {
-            margin-bottom: 15px;
-            color: red;
-            font-size: 0.95em;
-        }
+  /* action buttons next to top-of-table */
+  .action-buttons { display:flex; gap:12px; justify-content:flex-end; margin-bottom:8px; }
+  .btn {
+    background:var(--green);
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:22px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .btn.alt { background:#2f9a44; }
+  .btn.ghost { background:transparent;color:var(--green); border:2px solid var(--green); }
 
-        /* ===== Form Styling ===== */
-        form {
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+  /* report table */
+  .report-area{
+    margin-top:12px;
+    overflow:auto;
+  }
+  .report-table{
+    width:100%;
+    border-collapse:collapse;
+    border:3px solid var(--black);
+    table-layout:fixed;
+  }
+  .report-table th, .report-table td {
+    border:2px solid var(--black);
+    padding:14px;
+    text-align:left;
+    vertical-align:middle;
+  }
+  .report-table th { font-weight:700; background:transparent; width:30%; }
+  .report-table td.right {
+    width:70%;
+  }
 
-        label {
-            font-weight: 500;
-            margin-left: 5px;
-            color: #000;
-        }
+  /* round inner inputs used inside table */
+  .row-input{
+    width:100%;
+    padding:12px 18px;
+    border-radius:24px;
+    border:1.5px solid #777;
+    background:#f6f6f6;
+    box-sizing:border-box;
+    outline:none;
+  }
 
-        input[type="text"],
-        textarea {
-            padding: 12px 15px;
-            border-radius: 25px;
-            border: 1.5px solid #333;
-            font-size: 1em;
-            outline: none;
-            width: 100%;
-        }
+  /* red X button in table */
+  .remove-row {
+    color:#d33;
+    font-weight:700;
+    cursor:pointer;
+    font-size:18px;
+    display:inline-block;
+    padding:6px;
+  }
 
-        textarea {
-            border-radius: 15px;
-            min-height: 200px;
-            resize: vertical;
-        }
+  /* image drop area */
+  .image-drop {
+    padding:18px;
+    border:2px dashed #888;
+    border-radius:8px;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fafafa;
+  }
+  .image-preview { max-height:100px; margin-top:8px; }
 
-        /* ===== Dropdown ===== */
-        .dropdown-container {
-            position: relative;
-            width: 100%;
-        }
+  /* final notes + send */
+  .final-row { display:flex; align-items:center; justify-content:space-between; margin-top:18px; gap:12px; flex-wrap:wrap; }
+  .hint { font-size:1.05rem; color:#111; }
+  .send-right { text-align:right; }
 
-        .dropdown-selected {
-            border: 1.5px solid #333;
-            border-radius: 25px;
-            padding: 12px 15px;
-            background-color: white;
-            cursor: pointer;
-            font-size: 1em;
-        }
+  /* Send button style */
+  .send-btn{
+    background:var(--green);
+    color:white;
+    padding:12px 20px;
+    border-radius:28px;
+    border:none;
+    font-weight:700;
+    cursor:pointer;
+  }
 
-        .dropdown-options {
-            display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #333;
-            width: 100%;
-            max-height: 180px;
-            overflow-y: auto;
-            border-radius: 10px;
-            z-index: 10;
-            margin-top: 5px;
-        }
-
-        .dropdown-options label {
-            display: block;
-            padding: 8px 15px;
-            cursor: pointer;
-        }
-
-        .dropdown-options label:hover {
-            background-color: #f2f2f2;
-        }
-
-        /* Selected Recipients Tags */
-        .selected-recipients {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .recipient-tag {
-            background-color: #256D1B;
-            color: white;
-            border-radius: 20px;
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9em;
-        }
-
-        .recipient-tag span {
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* ===== Button Styles ===== */
-        button {
-            background-color: #256D1B;
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 25px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            align-self: center;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-        }
-
-        button:hover {
-            background-color: #1b5415;
-            transform: translateY(-2px);
-        }
-
-        /* Back link */
-        .back-link {
-            margin-top: 20px;
-            color: #256D1B;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1em;
-            text-align: center;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 600px) {
-            form {
-                width: 90%;
-            }
-        }
-    </style>
+  /* responsive */
+  @media (max-width:900px){
+    .top-grid{ grid-template-columns: 1fr; }
+    header, footer { padding:12px 18px; }
+    .container{ padding:16px; }
+    .report-table th, .report-table td { font-size:0.95rem; padding:10px; }
+  }
+</style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <h1>InternDesk</h1>
-        <h2>Send Report</h2>
-    </header>
+<header>
+  <h1>InternDesk</h1>
+  <h2>Report Email</h2>
+</header>
 
-    <div class="content">
-        <h2>Send Report</h2>
+<div class="page">
+  <div class="container">
 
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="messages">
-              {% for category, message in messages %}
-                <p><strong>{{ category.capitalize() }}:</strong> {{ message }}</p>
-              {% endfor %}
+    <h2 class="page-title">Send Report</h2>
+
+    <!-- flash messages (flashed by Flask) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for category, message in messages %}
+            <div class="{{ 'success' if category=='success' else 'error' }}">{{ category.capitalize() }}: {{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Form -->
+    <form id="reportForm" action="{{ url_for('send_report') }}" method="POST" enctype="multipart/form-data">
+      <!-- top selectors -->
+      <div class="top-grid">
+        <div>
+          <div class="label-row">Select Recipients</div>
+
+          <!-- faux dropdown that toggles options -->
+          <div style="position:relative;">
+            <div id="dropdownToggle" class="rounded-select" tabindex="0" aria-haspopup="listbox">
+              Select Engineer Email
+              <span style="float:right;">▾</span>
             </div>
-          {% endif %}
-        {% endwith %}
 
-        <!-- Report Form -->
-        <form action="{{ url_for('send_report') }}" method="POST" enctype="multipart/form-data">
-            <!-- Recipient Selection -->
-            <label>Select Engineer(s):</label>
-            <div class="dropdown-container">
-                <div class="dropdown-selected" onclick="toggleDropdown()">Select recipients</div>
-                <div class="dropdown-options">
-                    {% for r in recipients %}
-                    <label>
-                        <input type="checkbox" name="recipients" value="{{ r.email }}"> {{ r.email }}
-                    </label>
-                    {% endfor %}
-                </div>
+            <!-- hidden options panel -->
+            <div id="optionsPanel" style="display:none; position:absolute; left:0; right:0; z-index:40; margin-top:8px;">
+              <div style="background:#fff; border:2px solid #333; border-radius:16px; padding:12px; max-height:220px; overflow:auto;">
+                {% for r in recipients %}
+                <label style="display:block; padding:10px;">
+                  <input type="checkbox" class="recipient-checkbox" data-email="{{ r.email }}"> {{ r.email }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
+          </div>
 
-            <div class="selected-recipients" id="selectedRecipients"></div>
+          <!-- chips container -->
+          <div class="chips-container" id="chipsContainer" aria-live="polite">
+            <!-- chips appended by JS -->
+          </div>
 
-            <!-- Subject Field -->
-            <label>Subject:</label>
-            <input type="text" name="subject" placeholder="Enter email subject" required>
+        </div>
 
-            <!-- Message Field -->
-            <label>Message:</label>
-            <textarea name="body" id="body" placeholder="Write your report here..." contenteditable="true"></textarea>
+        <div>
+          <div class="label-row">Email Subject</div>
+          <input type="text" id="subject" name="subject" class="rounded-input" placeholder="Provide Subject" required>
+        </div>
+      </div>
 
-            <button type="submit">Send Report</button>
-        </form>
+      <!-- action buttons -->
+      <div class="action-buttons">
+        <button type="button" class="btn" id="btnReset">Return to Default</button>
+      </div>
 
-        <a href="{{ url_for('intern_dashboard') }}" class="back-link">⬅ Back to Dashboard</a>
-    </div>
+      <!-- report table -->
+      <div class="report-area">
+        <div style="font-weight:700; margin-bottom:10px;">Report Details</div>
 
-    <footer></footer>
+        <table class="report-table" id="reportTable">
+          <tbody>
+            <!-- each row: label, remove-X, input cell -->
+            <tr data-row="model_name">
+              <th>Model Name</th>
+              <td style="width:40px; text-align:center;"><span class="remove-row" title="Remove row">✕</span></td>
+              <td class="right"><input class="row-input" name="model_name" placeholder="Provide the model name here"></td>
+            </tr>
 
-    <script>
-        const dropdown = document.querySelector('.dropdown-options');
-        const dropdownSelected = document.querySelector('.dropdown-selected');
-        const checkboxes = document.querySelectorAll('input[type=checkbox][name=recipients]');
-        const selectedRecipientsContainer = document.getElementById('selectedRecipients');
+            <tr data-row="serial_number">
+              <th>Product Number / Serial Number</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="serial_number" placeholder="Provide the product number / serial number here"></td>
+            </tr>
 
-        function toggleDropdown() {
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
+            <tr data-row="processor">
+              <th>Processor</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="processor" placeholder="Provide the processor name here"></td>
+            </tr>
 
-        document.addEventListener('click', function(event) {
-            if (!dropdown.contains(event.target) && !dropdownSelected.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
+            <tr data-row="ram">
+              <th>RAM</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="ram" placeholder="Provide the RAM size here"></td>
+            </tr>
 
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', updateSelectedRecipients);
-        });
+            <tr data-row="storage">
+              <th>Storage</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="storage" placeholder="Provide the Storage size here"></td>
+            </tr>
 
-        function updateSelectedRecipients() {
-            selectedRecipientsContainer.innerHTML = '';
-            const selectedEmails = Array.from(checkboxes)
-                .filter(c => c.checked)
-                .map(c => c.value);
+            <tr data-row="optical_disk">
+              <th>Optical Disk</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="optical_disk" placeholder="Is there an optical disk? Type 'Yes' or 'No'"></td>
+            </tr>
 
-            dropdownSelected.textContent = selectedEmails.length ? selectedEmails.join(', ') : 'Select recipients';
+            <tr data-row="os">
+              <th>Operating System</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="os" placeholder="Provide the operating system here"></td>
+            </tr>
 
-            selectedEmails.forEach(email => {
-                const tag = document.createElement('div');
-                tag.classList.add('recipient-tag');
-                tag.innerHTML = `${email} <span onclick="removeRecipient('${email}')">&times;</span>`;
-                selectedRecipientsContainer.appendChild(tag);
-            });
-        }
+            <tr data-row="physical_state">
+              <th>Physical State</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="physical_state" placeholder="Provide remarks about the physical state of the unit"></td>
+            </tr>
 
-        function removeRecipient(email) {
-            const checkbox = Array.from(checkboxes).find(c => c.value === email);
-            if (checkbox) checkbox.checked = false;
-            updateSelectedRecipients();
-        }
+            <tr data-row="diagnostic_result">
+              <th>Diagnostic Result</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right">
+                <div class="image-drop" id="imageDrop">Drag & Drop or paste image here</div>
+                <input type="file" id="diagnostic_file" name="diagnostic_file" accept="image/*" style="display:none;">
+                <div id="imagePreview"></div>
+              </td>
+            </tr>
 
-        // Allow pasting images into textarea
-        const textarea = document.getElementById('body');
-        textarea.addEventListener('paste', (event) => {
-            const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-            for (let item of items) {
-                if (item.type.indexOf("image") === 0) {
-                    const blob = item.getAsFile();
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const imgMarkdown = `<img src="${e.target.result}" style="max-width:100%;">`;
-                        textarea.value += "\\n" + imgMarkdown;
-                    };
-                    reader.readAsDataURL(blob);
-                }
-            }
-        });
-    </script>
+            <tr data-row="specific_instruction">
+              <th>Specific Instruction</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="specific_instruction" placeholder="Provide remarks regarding the specific instruction/s for the unit"></td>
+            </tr>
+
+            <tr data-row="checklist">
+              <th>Checklist</th>
+              <td style="text-align:center;"><span class="remove-row">✕</span></td>
+              <td class="right"><input class="row-input" name="checklist" placeholder="Provide remarks regarding the checklist for the unit"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- final row -->
+      <div class="final-row">
+        <div class="hint">Make sure all of the report details are filled before pressing send</div>
+        <div class="send-right">
+          <button type="submit" class="send-btn">Send Report</button>
+        </div>
+      </div>
+
+      <!-- HIDDEN container for recipients inputs (populated by JS) -->
+      <div id="recipientsHiddenInputs"></div>
+    </form>
+
+  </div> <!-- container -->
+</div> <!-- page -->
+
+<footer></footer>
+
+<script>
+  // Toggle dropdown
+  const dropdownToggle = document.getElementById('dropdownToggle');
+  const optionsPanel = document.getElementById('optionsPanel');
+  dropdownToggle.addEventListener('click', ()=> {
+    optionsPanel.style.display = optionsPanel.style.display === 'block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', (e)=> {
+    if (!dropdownToggle.contains(e.target) && !optionsPanel.contains(e.target)) optionsPanel.style.display='none';
+  });
+
+  // chips logic
+  const chipsContainer = document.getElementById('chipsContainer');
+  const recipientsHiddenInputs = document.getElementById('recipientsHiddenInputs');
+
+  function createChip(email) {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.dataset.email = email;
+    chip.innerHTML = `<span class="chip-text">${email}</span><span class="x" title="Remove">${'✕'}</span>`;
+    chipsContainer.appendChild(chip);
+
+    // hidden input for server
+    const hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = 'recipients';
+    hidden.value = email;
+    hidden.dataset.email = email;
+    recipientsHiddenInputs.appendChild(hidden);
+
+    // remove handler
+    chip.querySelector('.x').addEventListener('click', ()=> {
+      // uncheck the checkbox if present
+      const boxes = document.querySelectorAll('.recipient-checkbox');
+      boxes.forEach(b=>{
+        if (b.dataset.email === email) b.checked = false;
+      });
+      chip.remove();
+      hidden.remove();
+    });
+  }
+
+  // when checkboxes change, add/remove chips
+  document.querySelectorAll('.recipient-checkbox').forEach(cb=>{
+    cb.addEventListener('change', e=>{
+      const email = cb.dataset.email;
+      if (cb.checked) {
+        // prevent duplicate
+        if (![...document.querySelectorAll('.chip')].some(c=>c.dataset.email===email)) createChip(email);
+      } else {
+        // remove chip and hidden input
+        const chip = document.querySelector(`.chip[data-email="${email}"]`);
+        if (chip) chip.remove();
+        const hidden = recipientsHiddenInputs.querySelector(`input[data-email="${email}"]`);
+        if (hidden) hidden.remove();
+      }
+    });
+  });
+
+  // remove row X logic (clicking X removes the entire row)
+  document.querySelectorAll('.remove-row').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const tr = e.target.closest('tr');
+      if (!tr) return;
+      tr.remove();
+    });
+  });
+
+  // Reset handler
+  document.getElementById('btnReset').addEventListener('click', ()=>{
+    // reload the page to restore defaults
+    window.location.reload();
+  });
+
+  // Dashboard button already has a location.href assigned inline
+
+  // Image drag & drop and paste handling
+  const imageDrop = document.getElementById('imageDrop');
+  const diagnosticFile = document.getElementById('diagnostic_file');
+  const imagePreview = document.getElementById('imagePreview');
+
+  function showPreview(file) {
+    imagePreview.innerHTML = '';
+    const url = URL.createObjectURL(file);
+    const img = document.createElement('img');
+    img.src = url;
+    img.className = 'image-preview';
+    img.onload = ()=> URL.revokeObjectURL(url);
+    imagePreview.appendChild(img);
+  }
+
+  // click to open file chooser
+  imageDrop.addEventListener('click', ()=> diagnosticFile.click());
+  diagnosticFile.addEventListener('change', ()=>{
+    const f = diagnosticFile.files[0];
+    if (f) showPreview(f);
+  });
+
+  // drag events
+  ['dragenter','dragover'].forEach(ev => {
+    imageDrop.addEventListener(ev, (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      imageDrop.style.borderColor = '#444';
+    });
+  });
+  ['dragleave','drop'].forEach(ev => {
+    imageDrop.addEventListener(ev, (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      imageDrop.style.borderColor = '#888';
+    });
+  });
+  imageDrop.addEventListener('drop', (e)=>{
+    const dt = e.dataTransfer;
+    if (!dt) return;
+    const items = dt.files;
+    if (items && items.length) {
+      diagnosticFile.files = items; // set file input
+      showPreview(items[0]);
+    }
+  });
+
+  // paste handling (paste image from clipboard)
+  document.addEventListener('paste', function(e){
+    if (!e.clipboardData) return;
+    const items = e.clipboardData.items;
+    if (!items) return;
+    for (let i=0;i<items.length;i++){
+      const it = items[i];
+      if (it.type.indexOf('image') !== -1){
+        const file = it.getAsFile();
+        // create a DataTransfer to put the file into the file input (works in modern browsers)
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        diagnosticFile.files = dt.files;
+        showPreview(file);
+        break;
+      }
+    }
+  });
+
+  // keep dropdown open behavior when clicking inside panel
+  optionsPanel.addEventListener('click', ()=> { optionsPanel.style.display='block'; });
+
+  // ensure at least one recipient before submit
+  document.getElementById('reportForm').addEventListener('submit', function(e){
+    const recipientInputs = recipientsHiddenInputs.querySelectorAll('input[name="recipients"]');
+    if (recipientInputs.length === 0) {
+      e.preventDefault();
+      alert('Please select at least one recipient before sending.');
+      return false;
+    }
+    // subject required by HTML attribute; files submitted by input already
+  });
+
+  // If you want some default recipients shown as chips for convenience, uncomment and adapt:
+  // createChip('fieldengineer1@nexustech.com.ph');
+  // createChip('fieldengineer2@nexustech.com.ph');
+
+</script>
 </body>
 </html>
