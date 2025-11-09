@@ -46,25 +46,6 @@
             margin: 0 auto;
         }
 
-        .messages {
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .messages.error {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef5350;
-        }
-
-        .messages.success {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #66bb6a;
-        }
-
         .section-title {
             font-size: 1.1em;
             font-weight: 600;
@@ -322,18 +303,7 @@
     </header>
 
     <div class="content">
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="messages {{ category }}">
-                <strong>{{ category.capitalize() }}:</strong> {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-
-        <form id="reportForm" action="{{ url_for('send_report') }}" method="POST">
+        <form id="reportForm"action="{{ url_for('send_report') }}" method="POST" onsubmit="return onSubmit()" novalidate>
             <div class="top-section">
                 <div class="input-group">
                     <div class="section-title">Select Recipients</div>
@@ -353,60 +323,61 @@
 
                 <div class="input-group">
                     <div class="section-title">Email Subject</div>
-                    <input id="subjectInput" name="subject" class="rounded-input" placeholder="Provide Subject" required>
+                    <input id="subjectInput" class="rounded-input" placeholder="Provide Subject">
                 </div>
             </div>
 
             <div class="button-row">
                 <div class="report-details-title">Report Details</div>
                 <div class="button-group">
+                    <button type="button" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
                     <button type="button" onclick="resetToDefault()">Return to Default</button>
                 </div>
             </div>
 
             <table>
                 <tbody id="tableBody">
-                    <tr data-field="model">
+                    <tr>
                         <th>Model Name</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="model" placeholder="Provide the model name here"></td>
+                        <td><input id="model" placeholder="Provide the model name here"></td>
                     </tr>
-                    <tr data-field="serial">
+                    <tr>
                         <th>Product Number / Serial Number</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="serial" placeholder="Provide product number / serial number here"></td>
+                        <td><input id="serial" placeholder="Provide product number / serial number here"></td>
                     </tr>
-                    <tr data-field="processor">
+                    <tr>
                         <th>Processor</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="processor" placeholder="Provide the processor name here"></td>
+                        <td><input id="processor" placeholder="Provide the processor name here"></td>
                     </tr>
-                    <tr data-field="ram">
+                    <tr>
                         <th>RAM</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="ram" placeholder="Provide the RAM size here"></td>
+                        <td><input id="ram" placeholder="Provide the RAM size here"></td>
                     </tr>
-                    <tr data-field="storage">
+                    <tr>
                         <th>Storage</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="storage" placeholder="Provide the Storage size here"></td>
+                        <td><input id="storage" placeholder="Provide the Storage size here"></td>
                     </tr>
-                    <tr data-field="optical">
+                    <tr>
                         <th>Optical Disk</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="optical" placeholder='Is there an optical disk? Type "Yes" or "No"'></td>
+                        <td><input id="optical" placeholder='Is there an optical disk? Type "Yes" or "No"'></td>
                     </tr>
-                    <tr data-field="os">
+                    <tr>
                         <th>Operating System</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="os" placeholder="Provide the operating system"></td>
+                        <td><input id="os" placeholder="Provide the storage size here"></td>
                     </tr>
-                    <tr data-field="physical">
+                    <tr>
                         <th>Physical State</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="physical" placeholder="Provide remarks about the physical state of the unit"></td>
+                        <td><input id="physical" placeholder="Provide remarks about the physical state of the unit"></td>
                     </tr>
-                    <tr data-field="diagnostic">
+                    <tr>
                         <th>Diagnostic Result</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
                         <td>
@@ -417,28 +388,23 @@
                             </div>
                         </td>
                     </tr>
-                    <tr data-field="instruction">
+                    <tr>
                         <th>Specific Instruction</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="instruction" placeholder="Provide remarks regarding the specific instruction/s for the unit"></td>
+                        <td><input id="instruction" placeholder="Provide remarks regarding the specific instruction/s for the unit"></td>
                     </tr>
-                    <tr data-field="checklist">
+                    <tr>
                         <th>Checklist</th>
                         <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input name="checklist" placeholder="Provide remarks regarding checklist for the unit"></td>
+                        <td><input id="checklist" placeholder="Provide remarks regarding checklist for the unit"></td>
                     </tr>
                 </tbody>
             </table>
 
             <p class="note">Make sure all of the report details are filled before pressing send</p>
 
-            <!-- Hidden fields for form submission -->
-            <input type="hidden" name="recipients" id="recipientsInput">
-            <input type="hidden" name="body" id="bodyInput">
-            <input type="hidden" name="image_base64" id="imageBase64">
-
             <div class="send-button-container">
-                <button type="submit" class="btn-submit">Send Report</button>
+                <button type="button" class="btn-submit" onclick="sendReport()">Send Report</button>
             </div>
         </form>
     </div>
@@ -507,8 +473,8 @@
         }
 
         function resetToDefault() {
-            document.querySelectorAll('input[type="text"], input[name]').forEach(input => {
-                if (input.type !== 'checkbox' && input.type !== 'file' && input.type !== 'hidden') {
+            document.querySelectorAll('input[type="text"], input').forEach(input => {
+                if (input.type !== 'checkbox' && input.type !== 'file') {
                     input.value = '';
                 }
             });
@@ -583,54 +549,42 @@
             }
         });
 
-        // Build HTML body for email
-        function buildHtmlBody() {
-            let html = '<table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">';
-            
-            document.querySelectorAll('tbody tr:not(.removed)').forEach(row => {
-                const th = row.querySelector('th');
-                const input = row.querySelector('input[name]');
-                
-                if (th && input && input.value.trim() && input.name !== 'subject') {
-                    html += `<tr>
-                        <th style="text-align: left; background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd;">${th.textContent}</th>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${input.value}</td>
-                    </tr>`;
-                }
-            });
-            
-            html += '</table>';
-            return html;
-        }
-
-        // Form submission handler
-        document.getElementById('reportForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validate recipients
+        function sendReport() {
             if (selectedRecipients.length === 0) {
                 alert('Please select at least one recipient');
-                return false;
+                return;
             }
 
-            // Validate subject
             const subject = document.getElementById('subjectInput').value;
             if (!subject.trim()) {
                 alert('Please provide an email subject');
-                return false;
+                return;
             }
 
-            // Set hidden field values
-            document.getElementById('recipientsInput').value = JSON.stringify(selectedRecipients);
-            document.getElementById('bodyInput').value = buildHtmlBody();
-            
+            const reportData = {
+                recipients: selectedRecipients,
+                subject: subject,
+                data: {}
+            };
+
+            document.querySelectorAll('tbody tr:not(.removed)').forEach(row => {
+                const th = row.querySelector('th');
+                const input = row.querySelector('input[type="text"], input:not([type="file"]):not([type="checkbox"])');
+                
+                if (th && input && input.value.trim()) {
+                    reportData.data[th.textContent] = input.value;
+                }
+            });
+
             if (uploadedImage) {
-                document.getElementById('imageBase64').value = uploadedImage;
+                reportData.image = uploadedImage;
             }
 
-            // Submit the form
-            this.submit();
-        });
+            console.log('Report Data:', reportData);
+            alert('Report sent successfully!\n\nRecipients: ' + selectedRecipients.join(', '));
+            
+            resetToDefault();
+        }
     </script>
 </body>
 </html>
