@@ -232,49 +232,65 @@ def send_report():
     recipients = EmailRecipient.query.all()
 
     if request.method == 'POST':
+        import json
+
+        # ✅ These come from the frontend JavaScript
         selected_emails = request.form.getlist('recipients')
         subject = request.form.get('subject')
-        model = request.form.get('model')
-        processor = request.form.get('processor')
-        ram = request.form.get('ram')
-        storage = request.form.get('storage')
-        body = request.form.get('body')
+        body_json = request.form.get('body')  # Body is JSON (contains all table data)
         image_base64 = request.form.get('image_base64')
 
-        # Validate all required fields
-        if not selected_emails or not subject or not body:
+        # Validate input
+        if not selected_emails or not subject or not body_json:
             flash('Please fill in all fields before sending.', 'warning')
             return redirect(url_for('send_report'))
 
-        # Build HTML email body (table only)
-        html_content = f"""
+        # ✅ Parse the JSON body safely
+        try:
+            body_data = json.loads(body_json)
+        except Exception as e:
+            flash('Invalid report data format.', 'danger')
+            print(f"❌ JSON parse error: {e}")
+            return redirect(url_for('send_report'))
+
+        # ✅ Build HTML email table dynamically
+        html_content = """
         <html>
         <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#333;">
-          <table border="1" cellpadding="10" cellspacing="0" 
-                 style="border-collapse: collapse; width: 100%; max-width: 700px; 
+          <table border="1" cellpadding="10" cellspacing="0"
+                 style="border-collapse: collapse; width: 100%; max-width: 700px;
                         border: 1px solid #000; font-size: 15px;">
-            <tr><th align="left" style="background:#f4f4f4;">Intern Name</th><td>{current_user.name}</td></tr>
-            <tr><th align="left" style="background:#f4f4f4;">Model</th><td>{model or 'N/A'}</td></tr>
-            <tr><th align="left" style="background:#f4f4f4;">Processor</th><td>{processor or 'N/A'}</td></tr>
-            <tr><th align="left" style="background:#f4f4f4;">RAM</th><td>{ram or 'N/A'}</td></tr>
-            <tr><th align="left" style="background:#f4f4f4;">Storage</th><td>{storage or 'N/A'}</td></tr>
-            <tr><th align="left" style="background:#f4f4f4;">Diagnostic Result</th><td>{body}</td></tr>
         """
 
+        # Add intern name at top
+        html_content += f"""
+            <tr><th align="left" style="background:#f4f4f4;">Intern Name</th><td>{current_user.name}</td></tr>
+        """
+
+        # Add each field in the table
+        for key, value in body_data.items():
+            html_content += f"""
+                <tr>
+                    <th align="left" style="background:#f4f4f4;">{key}</th>
+                    <td>{value if value else 'N/A'}</td>
+                </tr>
+            """
+
+        # If image was uploaded, include it in the table
         if image_base64:
             html_content += f"""
             <tr>
               <th align="left" style="background:#f4f4f4;">Attached Image</th>
-              <td><img src="{image_base64}" alt="Attached" 
+              <td><img src="{image_base64}" alt="Attached"
                        style="max-width:100%; border:1px solid #ccc; border-radius:8px; margin-top:6px;"></td>
             </tr>
             """
 
         html_content += "</table></body></html>"
 
+        # ✅ Send email via SendGrid
         try:
             sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
-
             for email_addr in selected_emails:
                 message = Mail(
                     from_email=("desksideintern@dsintern.com", "Deskside Intern"),

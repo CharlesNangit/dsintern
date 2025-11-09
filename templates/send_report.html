@@ -550,41 +550,62 @@
         });
 
         function sendReport() {
-            if (selectedRecipients.length === 0) {
-                alert('Please select at least one recipient');
-                return;
-            }
-
-            const subject = document.getElementById('subjectInput').value;
-            if (!subject.trim()) {
-                alert('Please provide an email subject');
-                return;
-            }
-
-            const reportData = {
-                recipients: selectedRecipients,
-                subject: subject,
-                data: {}
-            };
-
-            document.querySelectorAll('tbody tr:not(.removed)').forEach(row => {
-                const th = row.querySelector('th');
-                const input = row.querySelector('input[type="text"], input:not([type="file"]):not([type="checkbox"])');
-                
-                if (th && input && input.value.trim()) {
-                    reportData.data[th.textContent] = input.value;
-                }
-            });
-
-            if (uploadedImage) {
-                reportData.image = uploadedImage;
-            }
-
-            console.log('Report Data:', reportData);
-            alert('Report sent successfully!\n\nRecipients: ' + selectedRecipients.join(', '));
-            
-            resetToDefault();
+        if (selectedRecipients.length === 0) {
+            alert('Please select at least one recipient');
+            return;
         }
+
+        const subject = document.getElementById('subjectInput').value;
+        if (!subject.trim()) {
+            alert('Please provide an email subject');
+            return;
+        }
+
+        // Collect all visible form data
+        const reportData = {};
+        document.querySelectorAll('tbody tr:not(.removed)').forEach(row => {
+            const th = row.querySelector('th');
+            const input = row.querySelector('input[type="text"], input:not([type="file"]):not([type="checkbox"])');
+            if (th && input && input.value.trim()) {
+                reportData[th.textContent] = input.value.trim();
+            }
+        });
+
+        const form = document.getElementById('reportForm');
+
+        // Recipients
+        const recipientsField = document.createElement('input');
+        recipientsField.type = 'hidden';
+        recipientsField.name = 'recipients';
+        recipientsField.value = selectedRecipients.join(',');
+        form.appendChild(recipientsField);
+
+        // Subject
+        const subjectField = document.createElement('input');
+        subjectField.type = 'hidden';
+        subjectField.name = 'subject';
+        subjectField.value = subject.trim();
+        form.appendChild(subjectField);
+
+        // Body (we’ll send the full table data JSON-ified for now)
+        const bodyField = document.createElement('input');
+        bodyField.type = 'hidden';
+        bodyField.name = 'body';
+        bodyField.value = JSON.stringify(reportData);
+        form.appendChild(bodyField);
+
+        // Image if uploaded
+        if (uploadedImage) {
+            const imgField = document.createElement('input');
+            imgField.type = 'hidden';
+            imgField.name = 'image_base64';
+            imgField.value = uploadedImage;
+            form.appendChild(imgField);
+        }
+
+        // Finally submit form
+        form.submit();
+    }
     </script>
 </body>
 </html>
