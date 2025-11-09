@@ -1,590 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Send Report | InternDesk</title>
+
     <style>
-        * {
+        /* --- Theme (matches your login template) --- */
+        :root {
+            --brand: #256D1B;
+            --brand-dark: #1b5415;
+            --muted: #666;
+            --card-bg: #fff;
+            --radius: 25px;
+            --max-width: 900px;
+        }
+
+        html, body {
+            height: 100%;
             margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #222;
+        }
+
+        header, footer {
+            background-color: var(--brand);
+            color: #fff;
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.8em; font-weight: 600; }
+        header h2 { margin: 0; font-size: 1.1em; font-weight: 600; opacity: 0.95; }
+
+        .page {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: var(--max-width);
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+        }
+
+        h2.title {
+            margin: 0 0 12px 0;
+            font-size: 1.4rem;
+        }
+
+        .row {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1 1 280px;
+            min-width: 240px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        .select-box {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius);
+            border: 1.5px solid #333;
+            font-size: 1rem;
+            outline: none;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        textarea {
+            min-height: 120px;
+            resize: vertical;
         }
 
-        header {
-            background-color: #2d7a23;
-            color: white;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .actions {
+            display:flex;
+            gap:12px;
+            align-items:center;
+            margin-top: 14px;
         }
 
-        header h1 {
-            font-size: 2em;
+        button.primary {
+            background: var(--brand);
+            color: #fff;
+            padding: 12px 26px;
+            border-radius: 25px;
+            border: none;
             font-weight: 600;
-        }
-
-        header h2 {
-            font-size: 1.5em;
-            font-weight: 500;
-        }
-
-        .content {
-            flex: 1;
-            padding: 40px;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .top-section {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            flex: 1;
-        }
-
-        .rounded-input {
-            width: 100%;
-            padding: 15px 25px;
-            border: 2px solid #333;
-            border-radius: 30px;
-            font-size: 1em;
-            background-color: #e8e8e8;
-            outline: none;
-        }
-
-        .rounded-input:focus {
-            border-color: #2d7a23;
-        }
-
-        /* Dropdown */
-        .select-box {
-            position: relative;
-        }
-
-        .select-button {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            border-radius: 30px;
-            border: 2px solid #333;
-            background-color: #e8e8e8;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        .select-options {
-            display: none;
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background-color: white;
-            border-radius: 15px;
-            border: 2px solid #999;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 10;
-        }
-
-        .select-options.show {
-            display: block;
-        }
-
-        .select-options label {
-            display: block;
-            padding: 12px 20px;
             cursor: pointer;
         }
+        button.primary:hover { background: var(--brand-dark); }
 
-        .select-options label:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Chips */
-        .chip-wrap {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            background-color: #e8e8e8;
-            border-radius: 30px;
-            border: 2px solid #333;
-            padding: 15px 20px;
-            min-height: 60px;
-        }
-
-        .chip {
-            background: white;
+        button.ghost {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #333;
+            padding: 10px 18px;
             border-radius: 20px;
-            padding: 8px 15px;
-            font-size: 0.9em;
-            display: inline-flex;
+            cursor: pointer;
+        }
+
+        a.back-link {
+            color: var(--brand);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* Recipient multi-select dropdown & chips */
+        .multi-wrapper { position: relative; }
+        .dropdown-toggle {
+            display: flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid #ddd;
-        }
-
-        .chip .remove {
-            color: #ff4444;
-            font-weight: bold;
+            padding: 10px 12px;
+            border-radius: 20px;
+            border: 1.2px solid #333;
             cursor: pointer;
-            font-size: 1.1em;
+            min-height: 46px;
         }
-
-        /* Buttons */
-        .button-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+        .chip-list {
+            display:flex;
+            gap:8px;
+            flex-wrap: wrap;
         }
-
-        .report-details-title {
-            font-size: 1.2em;
-            font-weight: 600;
+        .chip {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:6px 10px;
+            border-radius:18px;
+            background:#f5f5f5;
+            border:1px solid #ddd;
+            font-size:0.9rem;
         }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-        }
-
-        button {
-            background-color: #5cb85c;
-            color: white;
+        .chip .x {
+            background: transparent;
             border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1em;
-            font-weight: 500;
+            font-weight:700;
             cursor: pointer;
-            transition: all 0.2s ease;
+            padding:0 6px;
+            color:#222;
         }
 
-        button:hover {
-            background-color: #4a9d4a;
-            transform: translateY(-1px);
-        }
-
-        .btn-submit {
-            background-color: #5cb85c;
-            padding: 15px 50px;
-            font-size: 1.1em;
-        }
-
-        /* Table */
-        table {
-            border-collapse: collapse;
+        .options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
             width: 100%;
-            border: 2px solid #000;
-            margin-bottom: 20px;
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            z-index: 40;
+            display: none;
         }
 
-        th, td {
-            border: 2px solid #000;
-            padding: 15px;
-        }
-
-        th {
-            width: 25%;
-            font-weight: 600;
-            text-align: left;
-            background-color: white;
-        }
-
-        td.col-x {
-            width: 50px;
-            text-align: center;
-            color: #ff6b6b;
-            font-size: 1.3em;
+        .options label {
+            display:flex;
+            gap:10px;
+            align-items:center;
+            padding:8px 10px;
             cursor: pointer;
             user-select: none;
         }
+        .options label:hover { background:#f6f8fa; }
 
-        td.col-x:hover {
-            color: #ff0000;
-        }
-
-        td input {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 25px;
-            font-size: 0.95em;
-            outline: none;
-            background-color: white;
-        }
-
-        td input:focus {
-            border-color: #2d7a23;
-        }
-
-        .img-drop {
-            border: 2px dashed #999;
-            border-radius: 10px;
-            padding: 30px 15px;
+        /* Image drop/paste area */
+        .image-area {
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            padding: 14px;
             text-align: center;
-            background: #fafafa;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            min-height: 140px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            gap:10px;
         }
-
-        .img-drop:hover {
-            background: #f0f0f0;
-            border-color: #666;
-        }
-
-        .img-drop-text {
-            color: #666;
-            font-size: 0.95em;
-        }
-
-        #imgPreview {
-            margin-top: 15px;
-        }
-
-        #imgPreview img {
+        .image-area.dragover { border-color: var(--brand); background: #fbfff9; }
+        .image-preview {
             max-width: 100%;
-            max-height: 200px;
             border-radius: 8px;
+            border: 1px solid #ddd;
         }
+        .small-muted { color: var(--muted); font-size: 0.9rem; }
 
-        .note {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1em;
-        }
+        /* Flash */
+        .flash { margin-bottom:12px; color: #b71c1c; font-weight:600; }
 
-        .send-button-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        footer {
-            background-color: #2d7a23;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 0.9em;
-        }
-
-        tr.removed {
-            display: none;
+        /* responsive */
+        @media (max-width:720px) {
+            .row { flex-direction: column; }
+            header, footer { padding: 12px 18px; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>InternDesk</h1>
-        <h2>Report Email</h2>
-    </header>
 
-    <div class="content">
-        <form id="reportForm">
-            <div class="top-section">
-                <div class="input-group">
-                    <div class="section-title">Select Recipients</div>
-                    <div class="select-box">
-                        <div class="select-button" onclick="toggleOptions()">
-                            <span id="selectPlaceholder">Select Engineer Email</span>
-                            <span>▾</span>
+<header>
+    <h1>InternDesk</h1>
+    <h2>Send Report</h2>
+</header>
+
+<div class="page">
+    <div class="card">
+
+        <h2 class="title">Submit Power-On / Diagnostic Report</h2>
+
+        <!-- Flash messages (Flask will render messages here) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash">
+              {% for category, message in messages %}
+                <div><strong>{{ category.capitalize() }}:</strong> {{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form id="reportForm" action="{{ url_for('send_report') }}" method="POST" onsubmit="return onSubmit()" novalidate>
+            <!-- recipients -->
+            <div style="margin-bottom:14px;">
+                <label>Recipients</label>
+                <div class="multi-wrapper">
+                    <div class="dropdown-toggle" id="dropdownToggle" onclick="toggleOptions(event)">
+                        <div class="chip-list" id="chipList">
+                            <span class="small-muted">Select recipients</span>
                         </div>
-                        <div class="select-options" id="options">
-                            {% for r in recipients %}
-                                <label><input type="checkbox" class="opt-checkbox" value="{{ r.email }}"> {{ r.email }}</label>
-                            {% endfor %}
+                        <div style="margin-left:auto;color:var(--muted);font-size:0.95rem;">▾</div>
+                    </div>
+
+                    <div class="options" id="optionsBox" aria-hidden="true">
+                        {% for r in recipients %}
+                        <label>
+                            <input type="checkbox" name="recipients" value="{{ r.email }}" class="recipient-checkbox" />
+                            <span style="font-size:0.95rem;">{{ r.email }}</span>
+                        </label>
+                        {% else %}
+                        <div style="padding:10px;color:var(--muted)">No recipients stored yet.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="small-muted" style="margin-top:6px;">Select one or more engineers from the pool (click × on a chip to remove).</div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="subject">Subject</label>
+                    <input id="subject" name="subject" type="text" placeholder="e.g. Power-on test — Unit A15" />
+
+                    <label for="model" style="margin-top:12px">Model</label>
+                    <input id="model" name="model" type="text" placeholder="Device model" />
+
+                    <label for="processor" style="margin-top:12px">Processor</label>
+                    <input id="processor" name="processor" type="text" placeholder="CPU/Processor" />
+                </div>
+
+                <div class="col">
+                    <label for="ram">RAM</label>
+                    <input id="ram" name="ram" type="text" placeholder="e.g. 8GB DDR4" />
+
+                    <label for="storage" style="margin-top:12px">Storage</label>
+                    <input id="storage" name="storage" type="text" placeholder="e.g. 256GB SSD" />
+
+                    <label for="body" style="margin-top:12px">Diagnostic Result</label>
+                    <textarea id="body" name="body" placeholder="Write the diagnostic details / test observations here..."></textarea>
+                </div>
+            </div>
+
+            <div style="margin-top:14px;">
+                <label>Attach image (drag & drop, paste image, or click to browse)</label>
+                <div id="imageArea" class="image-area">
+                    <div id="imageControls">
+                        <input id="fileInput" type="file" accept="image/*" style="display:none" />
+                        <button type="button" class="ghost" onclick="triggerFile()">Choose image</button>
+                        <div class="small-muted">Or paste an image (Ctrl+V) / drag & drop it here.</div>
+                    </div>
+
+                    <div id="previewWrap" style="display:none;">
+                        <img id="imagePreview" class="image-preview" src="" alt="Preview" />
+                        <div style="margin-top:8px;">
+                            <button type="button" class="ghost" onclick="removeImage()">Remove image</button>
                         </div>
                     </div>
-                    <div class="chip-wrap" id="chipWrap"></div>
                 </div>
-
-                <div class="input-group">
-                    <div class="section-title">Email Subject</div>
-                    <input id="subjectInput" class="rounded-input" placeholder="Provide Subject">
-                </div>
+                <input type="hidden" name="image_base64" id="image_base64" />
             </div>
 
-            <div class="button-row">
-                <div class="report-details-title">Report Details</div>
-                <div class="button-group">
-                    <button type="button" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
-                    <button type="button" onclick="resetToDefault()">Return to Default</button>
-                </div>
-            </div>
-
-            <table>
-                <tbody id="tableBody">
-                    <tr>
-                        <th>Model Name</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="model" placeholder="Provide the model name here"></td>
-                    </tr>
-                    <tr>
-                        <th>Product Number / Serial Number</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="serial" placeholder="Provide product number / serial number here"></td>
-                    </tr>
-                    <tr>
-                        <th>Processor</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="processor" placeholder="Provide the processor name here"></td>
-                    </tr>
-                    <tr>
-                        <th>RAM</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="ram" placeholder="Provide the RAM size here"></td>
-                    </tr>
-                    <tr>
-                        <th>Storage</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="storage" placeholder="Provide the Storage size here"></td>
-                    </tr>
-                    <tr>
-                        <th>Optical Disk</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="optical" placeholder='Is there an optical disk? Type "Yes" or "No"'></td>
-                    </tr>
-                    <tr>
-                        <th>Operating System</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="os" placeholder="Provide the storage size here"></td>
-                    </tr>
-                    <tr>
-                        <th>Physical State</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="physical" placeholder="Provide remarks about the physical state of the unit"></td>
-                    </tr>
-                    <tr>
-                        <th>Diagnostic Result</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td>
-                            <div class="img-drop" id="imgDrop" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                <div class="img-drop-text" id="imgDropText">Drag & Drop or paste image here</div>
-                                <input id="fileInput" type="file" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
-                                <div id="imgPreview"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Specific Instruction</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="instruction" placeholder="Provide remarks regarding the specific instruction/s for the unit"></td>
-                    </tr>
-                    <tr>
-                        <th>Checklist</th>
-                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
-                        <td><input id="checklist" placeholder="Provide remarks regarding checklist for the unit"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p class="note">Make sure all of the report details are filled before pressing send</p>
-
-            <div class="send-button-container">
-                <button type="button" class="btn-submit" onclick="sendReport()">Send Report</button>
+            <div class="actions">
+                <button type="submit" class="primary">Send Report</button>
+                <button type="button" class="ghost" id="resetBtn">Return to Default</button>
+                <a class="back-link" href="{{ url_for('intern_dashboard') }}">⬅ Back to Dashboard</a>
             </div>
         </form>
     </div>
+</div>
 
-    <footer></footer>
+<footer></footer>
 
-    <script>
-        let selectedRecipients = [];
-        let uploadedImage = null;
+<script>
+    /***** Recipients dropdown + chips *****/
+    const dropdownToggle = document.getElementById('dropdownToggle');
+    const optionsBox = document.getElementById('optionsBox');
+    const chipList = document.getElementById('chipList');
 
-        function toggleOptions() {
-            const options = document.getElementById('options');
-            options.classList.toggle('show');
+    function toggleOptions(e) {
+        // prevent form submit if inside button clickable area
+        optionsBox.style.display = optionsBox.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', (e) => {
+        if (!document.querySelector('.multi-wrapper').contains(e.target)) {
+            optionsBox.style.display = 'none';
         }
+    });
 
-        document.addEventListener('click', function(event) {
-            const selectBox = document.querySelector('.select-box');
-            if (!selectBox.contains(event.target)) {
-                document.getElementById('options').classList.remove('show');
-            }
-        });
-
-        document.querySelectorAll('.opt-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    if (!selectedRecipients.includes(this.value)) {
-                        selectedRecipients.push(this.value);
-                    }
-                } else {
-                    selectedRecipients = selectedRecipients.filter(email => email !== this.value);
-                }
-                updateChips();
-            });
-        });
-
-        function updateChips() {
-            const chipWrap = document.getElementById('chipWrap');
-            chipWrap.innerHTML = '';
-            
-            selectedRecipients.forEach(email => {
-                const chip = document.createElement('div');
-                chip.className = 'chip';
-                chip.innerHTML = `
-                    ${email}
-                    <span class="remove" onclick="removeRecipient('${email}')">✕</span>
-                `;
-                chipWrap.appendChild(chip);
-            });
+    function rebuildChips() {
+        const checked = Array.from(document.querySelectorAll('.recipient-checkbox:checked'));
+        chipList.innerHTML = '';
+        if (checked.length === 0) {
+            const placeholder = document.createElement('span');
+            placeholder.className = 'small-muted';
+            placeholder.textContent = 'Select recipients';
+            chipList.appendChild(placeholder);
+            return;
         }
-
-        function removeRecipient(email) {
-            selectedRecipients = selectedRecipients.filter(e => e !== email);
-            
-            document.querySelectorAll('.opt-checkbox').forEach(checkbox => {
-                if (checkbox.value === email) {
-                    checkbox.checked = false;
-                }
-            });
-            
-            updateChips();
-        }
-
-        function removeRowUI(element) {
-            const row = element.parentElement;
-            row.classList.add('removed');
-        }
-
-        function resetToDefault() {
-            document.querySelectorAll('input[type="text"], input').forEach(input => {
-                if (input.type !== 'checkbox' && input.type !== 'file') {
-                    input.value = '';
-                }
-            });
-
-            selectedRecipients = [];
-            document.querySelectorAll('.opt-checkbox').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            updateChips();
-
-            document.querySelectorAll('tr').forEach(row => {
-                row.classList.remove('removed');
-            });
-
-            uploadedImage = null;
-            document.getElementById('imgPreview').innerHTML = '';
-            document.getElementById('imgDropText').style.display = 'block';
-        }
-
-        function handleDragOver(event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        function handleDrop(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            const files = event.dataTransfer.files;
-            if (files.length > 0 && files[0].type.startsWith('image/')) {
-                displayImage(files[0]);
-            }
-        }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                displayImage(file);
-            }
-        }
-
-        function displayImage(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImage = e.target.result;
-                document.getElementById('imgDropText').style.display = 'none';
-                document.getElementById('imgPreview').innerHTML = `
-                    <img src="${e.target.result}" alt="Preview">
-                    <div style="margin-top: 10px;">
-                        <button type="button" onclick="clearImage()" style="background-color: #ff6b6b; padding: 8px 20px;">Remove Image</button>
-                    </div>
-                `;
+        checked.forEach(cb => {
+            const chip = document.createElement('span');
+            chip.className = 'chip';
+            chip.dataset.value = cb.value;
+            chip.innerHTML = `<span style="font-size:0.92rem;">${cb.value}</span>`;
+            const xbtn = document.createElement('button');
+            xbtn.type = 'button';
+            xbtn.className = 'x';
+            xbtn.innerText = '×';
+            xbtn.title = 'Remove';
+            xbtn.onclick = (ev) => {
+                ev.stopPropagation();
+                cb.checked = false;
+                rebuildChips();
             };
-            reader.readAsDataURL(file);
-        }
-
-        function clearImage() {
-            uploadedImage = null;
-            document.getElementById('imgPreview').innerHTML = '';
-            document.getElementById('imgDropText').style.display = 'block';
-            document.getElementById('fileInput').value = '';
-        }
-
-        document.addEventListener('paste', function(event) {
-            const items = event.clipboardData.items;
-            for (let i = 0; i < items.length; i++) {
-                if (items[i].type.indexOf('image') !== -1) {
-                    const blob = items[i].getAsFile();
-                    displayImage(blob);
-                    break;
-                }
-            }
+            chip.appendChild(xbtn);
+            chipList.appendChild(chip);
         });
+    }
 
-        function sendReport() {
-            if (selectedRecipients.length === 0) {
-                alert('Please select at least one recipient');
+    // attach listeners to checkboxes (existing ones)
+    document.querySelectorAll('.recipient-checkbox').forEach(cb => {
+        cb.addEventListener('change', () => {
+            rebuildChips();
+        });
+    });
+
+    // init chips on load (in case some checkboxes were pre-checked)
+    rebuildChips();
+
+    /***** Image paste / drag & drop / file read -> base64 *****/
+    const imageArea = document.getElementById('imageArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewWrap = document.getElementById('previewWrap');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageBase64Input = document.getElementById('image_base64');
+
+    function triggerFile() {
+        fileInput.click();
+    }
+
+    fileInput.addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if (f) readFileAsDataURL(f);
+    });
+
+    function readFileAsDataURL(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const dataUrl = reader.result;
+            showPreview(dataUrl);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function showPreview(dataUrl) {
+        imagePreview.src = dataUrl;
+        imageBase64Input.value = dataUrl;
+        previewWrap.style.display = 'block';
+        document.getElementById('imageControls').style.display = 'none';
+    }
+
+    function removeImage() {
+        imagePreview.src = '';
+        imageBase64Input.value = '';
+        previewWrap.style.display = 'none';
+        document.getElementById('imageControls').style.display = 'block';
+        fileInput.value = '';
+    }
+
+    // drag & drop
+    imageArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imageArea.classList.add('dragover');
+    });
+    imageArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imageArea.classList.remove('dragover');
+    });
+    imageArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imageArea.classList.remove('dragover');
+        const f = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) || null;
+        if (f) readFileAsDataURL(f);
+    });
+
+    // paste image
+    window.addEventListener('paste', (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (item.type.indexOf('image') !== -1) {
+                const blob = item.getAsFile();
+                readFileAsDataURL(blob);
                 return;
             }
-
-            const subject = document.getElementById('subjectInput').value;
-            if (!subject.trim()) {
-                alert('Please provide an email subject');
-                return;
-            }
-
-            const reportData = {
-                recipients: selectedRecipients,
-                subject: subject,
-                data: {}
-            };
-
-            document.querySelectorAll('tbody tr:not(.removed)').forEach(row => {
-                const th = row.querySelector('th');
-                const input = row.querySelector('input[type="text"], input:not([type="file"]):not([type="checkbox"])');
-                
-                if (th && input && input.value.trim()) {
-                    reportData.data[th.textContent] = input.value;
-                }
-            });
-
-            if (uploadedImage) {
-                reportData.image = uploadedImage;
-            }
-
-            console.log('Report Data:', reportData);
-            alert('Report sent successfully!\n\nRecipients: ' + selectedRecipients.join(', '));
-            
-            resetToDefault();
         }
-    </script>
+    });
+
+    /***** Return to Default button: resets form fields & image preview but keeps recipients checked *****/
+    const resetBtn = document.getElementById('resetBtn');
+    resetBtn.addEventListener('click', () => {
+        // fields to reset
+        document.getElementById('subject').value = '';
+        document.getElementById('model').value = '';
+        document.getElementById('processor').value = '';
+        document.getElementById('ram').value = '';
+        document.getElementById('storage').value = '';
+        document.getElementById('body').value = '';
+        removeImage();
+
+        // keep recipients as-is, so do NOT touch checkboxes
+        // focus subject
+        document.getElementById('subject').focus();
+    });
+
+    /***** client-side validate & ensure checkboxes are present as multiple inputs (they already are) *****/
+    function onSubmit() {
+        // build list of checked recipients
+        const checked = Array.from(document.querySelectorAll('.recipient-checkbox:checked')).map(x => x.value);
+        const subject = document.getElementById('subject').value.trim();
+        const body = document.getElementById('body').value.trim();
+
+        if (checked.length === 0) {
+            alert('Please select at least one recipient from the pool.');
+            return false;
+        }
+        if (!subject) {
+            alert('Please enter a subject.');
+            document.getElementById('subject').focus();
+            return false;
+        }
+        if (!body) {
+            alert('Please fill in the Diagnostic Result (body).');
+            document.getElementById('body').focus();
+            return false;
+        }
+
+        // OK to submit
+        return true;
+    }
+</script>
+
 </body>
 </html>
