@@ -1,3 +1,38 @@
+Tatsmii
+yakshaaa_
+Opera
+
+Tatsmii
+
+ — 10/8/2022 10:32 AM
+hi
+Attachment file type: unknown
+Experiment_6_-_Drill_2.vi
+4.99 KB
+Tatsmii
+
+ — 10:51 PM
+.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Report | InternDesk</title>
+Expand
+!DOCTYPE html.txt
+12 KB
+shirooo — 11:07 PM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Report | InternDesk</title>
+Expand
+charles.txt
+20 KB
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +40,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Send Report | InternDesk</title>
     <style>
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ffffff;
             display: flex;
@@ -14,81 +54,62 @@
             min-height: 100vh;
         }
 
-        header, footer {
-            background-color: #256D1B;
+        header {
+            background-color: #2d7a23;
             color: white;
-            padding: 10px 40px;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        header h1, header h2 {
-            margin: 0;
+        header h1 {
+            font-size: 2em;
             font-weight: 600;
         }
 
-        header h1 {
-            font-size: 1.8em;
-        }
-
         header h2 {
-            font-size: 1.2em;
+            font-size: 1.5em;
+            font-weight: 500;
         }
 
         .content {
             flex: 1;
-            padding: 40px 20px;
-            max-width: 1100px;
+            padding: 40px;
+            max-width: 1200px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .messages {
-            margin-bottom: 15px;
-            color: red;
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
             text-align: center;
-            font-size: 0.95em;
         }
 
-        h2 {
-            text-align: center;
-            color: #256D1B;
-            font-weight: 600;
+        .top-section {
+            display: flex;
+            gap: 30px;
             margin-bottom: 30px;
         }
 
-        /* Recipients and Subject Section */
-        .row {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .col {
-            flex: 1 1 400px;
-        }
-
-        label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 6px;
+        .input-group {
+            flex: 1;
         }
 
         .rounded-input {
             width: 100%;
-            padding: 12px 20px;
-            border: 1.5px solid #333;
-            border-radius: 25px;
+            padding: 15px 25px;
+            border: 2px solid #333;
+            border-radius: 30px;
             font-size: 1em;
-            background-color: #f2f2f2;
+            background-color: #e8e8e8;
             outline: none;
         }
 
         .rounded-input:focus {
-            border-color: #256D1B;
+            border-color: #2d7a23;
         }
 
         /* Dropdown */
@@ -101,11 +122,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 1.5px solid #333;
-            background-color: #f2f2f2;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 2px solid #333;
+            background-color: #e8e8e8;
             cursor: pointer;
+            font-size: 1em;
         }
 
         .select-options {
@@ -115,75 +137,97 @@
             left: 0;
             right: 0;
             background-color: white;
-            border-radius: 10px;
-            border: 1px solid #999;
+            border-radius: 15px;
+            border: 2px solid #999;
             max-height: 200px;
             overflow-y: auto;
-            z-index: 5;
+            z-index: 10;
+        }
+
+        .select-options.show {
+            display: block;
         }
 
         .select-options label {
             display: block;
-            padding: 10px 15px;
+            padding: 12px 20px;
             cursor: pointer;
         }
 
         .select-options label:hover {
-            background-color: #eee;
+            background-color: #f0f0f0;
         }
 
         /* Chips */
         .chip-wrap {
-            margin-top: 10px;
+            margin-top: 15px;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            background-color: #f2f2f2;
-            border-radius: 25px;
-            border: 1.5px solid #333;
-            padding: 10px;
+            gap: 10px;
+            background-color: #e8e8e8;
+            border-radius: 30px;
+            border: 2px solid #333;
+            padding: 15px 20px;
+            min-height: 60px;
         }
 
         .chip {
             background: white;
             border-radius: 20px;
-            padding: 8px 12px;
-            font-size: 0.95em;
-            display: flex;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            border: 1px solid #ddd;
         }
 
         .chip .remove {
-            color: red;
+            color: #ff4444;
             font-weight: bold;
             cursor: pointer;
+            font-size: 1.1em;
         }
 
         /* Buttons */
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .report-details-title {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+
         button {
-            background-color: #256D1B;
+            background-color: #5cb85c;
             color: white;
             border: none;
-            padding: 12px 35px;
+            padding: 12px 30px;
             border-radius: 25px;
             font-size: 1em;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
+            transition: all 0.2s ease;
         }
 
         button:hover {
-            background-color: #1b5415;
-            transform: translateY(-2px);
+            background-color: #4a9d4a;
+            transform: translateY(-1px);
         }
 
-        .btn-secondary {
-            background-color: #6FB86B;
-        }
-
-        .btn-secondary:hover {
-            background-color: #579b54;
+        .btn-submit {
+            background-color: #5cb85c;
+            padding: 15px 50px;
+            font-size: 1.1em;
         }
 
         /* Table */
@@ -191,46 +235,99 @@
             border-collapse: collapse;
             width: 100%;
             border: 2px solid #000;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
 
         th, td {
             border: 2px solid #000;
-            padding: 12px;
-            text-align: left;
+            padding: 15px;
         }
 
         th {
-            width: 30%;
+            width: 25%;
             font-weight: 600;
+            text-align: left;
+            background-color: white;
         }
 
-        .col-x {
-            width: 30px;
+        td.col-x {
+            width: 50px;
             text-align: center;
-            color: red;
-            font-weight: bold;
+            color: #ff6b6b;
+            font-size: 1.3em;
             cursor: pointer;
+            user-select: none;
+        }
+
+        td.col-x:hover {
+            color: #ff0000;
+        }
+
+        td input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 0.95em;
+            outline: none;
+            background-color: white;
+        }
+
+        td input:focus {
+            border-color: #2d7a23;
         }
 
         .img-drop {
-            border: 2px dashed #ccc;
+            border: 2px dashed #999;
             border-radius: 10px;
-            padding: 15px;
+            padding: 30px 15px;
             text-align: center;
             background: #fafafa;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .img-drop:hover {
+            background: #f0f0f0;
+            border-color: #666;
+        }
+
+        .img-drop-text {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        #imgPreview {
+            margin-top: 15px;
+        }
+
+        #imgPreview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
         }
 
         .note {
             text-align: center;
-            margin-top: 10px;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        .send-button-container {
+            text-align: center;
+            margin: 30px 0;
         }
 
         footer {
-            text-align: center;
+            background-color: #2d7a23;
             color: white;
+            text-align: center;
+            padding: 15px;
             font-size: 0.9em;
-            padding: 10px 0;
+        }
+
+        tr.removed {
+            display: none;
         }
     </style>
 </head>
@@ -241,88 +338,290 @@
     </header>
 
     <div class="content">
-        <h2>Send Report</h2>
-
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="messages">
-              {% for category, message in messages %}
-                <p><strong>{{ category.capitalize() }}:</strong> {{ message }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
-
-        <form id="reportForm" action="{{ url_for('send_report') }}" method="POST" onsubmit="return prepareAndValidate(event)">
-            <div class="row">
-                <div class="col">
-                    <label>Select Recipients</label>
+        <form id="reportForm">
+            <div class="top-section">
+                <div class="input-group">
+                    <div class="section-title">Select Recipients</div>
                     <div class="select-box">
                         <div class="select-button" onclick="toggleOptions()">
                             <span id="selectPlaceholder">Select Engineer Email</span>
                             <span>▾</span>
                         </div>
                         <div class="select-options" id="options">
-                            {% for r in recipients %}
-                                <label><input type="checkbox" class="opt-checkbox" value="{{ r.email }}"> {{ r.email }}</label>
-                            {% endfor %}
+                            <label><input type="checkbox" class="opt-checkbox" value="fieldengineer1@nexustech.com.ph"> fieldengineer1@nexustech.com.ph</label>
+                            <label><input type="checkbox" class="opt-checkbox" value="fieldengineer2@nexustech.com.ph"> fieldengineer2@nexustech.com.ph</label>
+                            <label><input type="checkbox" class="opt-checkbox" value="fieldengineer3@nexustech.com.ph"> fieldengineer3@nexustech.com.ph</label>
                         </div>
                     </div>
                     <div class="chip-wrap" id="chipWrap"></div>
                 </div>
 
-                <div class="col">
-                    <label>Email Subject</label>
-                    <input id="subjectInput" name="subject" class="rounded-input" placeholder="Provide Subject">
+                <div class="input-group">
+                    <div class="section-title">Email Subject</div>
+                    <input id="subjectInput" class="rounded-input" placeholder="Provide Subject">
                 </div>
             </div>
 
-            <div style="text-align: right; margin-bottom: 20px;">
-                <button type="button" onclick="resetToDefault()">Return to Default</button>
+            <div class="button-row">
+                <div class="report-details-title">Report Details</div>
+                <div class="button-group">
+                    <button type="button" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
+                    <button type="button" onclick="resetToDefault()">Return to Default</button>
+                </div>
             </div>
 
             <table>
-                <tbody>
-                    <tr><th>Model Name</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="model" placeholder="Provide the model name here"></td></tr>
-                    <tr><th>Product Number / Serial Number</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="serial" placeholder="Provide product number / serial number here"></td></tr>
-                    <tr><th>Processor</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="processor" placeholder="Provide the processor name here"></td></tr>
-                    <tr><th>RAM</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="ram" placeholder="Provide the RAM size here"></td></tr>
-                    <tr><th>Storage</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="storage" placeholder="Provide the Storage size here"></td></tr>
-                    <tr><th>Optical Disk</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="optical" placeholder='Is there an optical disk? Type "Yes" or "No"'></td></tr>
-                    <tr><th>Operating System</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="os" placeholder="Provide the operating system"></td></tr>
-                    <tr><th>Physical State</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="physical" placeholder="Remarks about the physical state"></td></tr>
-                    <tr><th>Diagnostic Result</th><td class="col-x" onclick="removeRowUI(this)">✕</td>
+                <tbody id="tableBody">
+                    <tr>
+                        <th>Model Name</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="model" placeholder="Provide the model name here"></td>
+                    </tr>
+                    <tr>
+                        <th>Product Number / Serial Number</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="serial" placeholder="Provide product number / serial number here"></td>
+                    </tr>
+                    <tr>
+                        <th>Processor</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="processor" placeholder="Provide the processor name here"></td>
+                    </tr>
+                    <tr>
+                        <th>RAM</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="ram" placeholder="Provide the RAM size here"></td>
+                    </tr>
+                    <tr>
+                        <th>Storage</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="storage" placeholder="Provide the Storage size here"></td>
+                    </tr>
+                    <tr>
+                        <th>Optical Disk</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="optical" placeholder='Is there an optical disk? Type "Yes" or "No"'></td>
+                    </tr>
+                    <tr>
+                        <th>Operating System</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="os" placeholder="Provide the storage size here"></td>
+                    </tr>
+                    <tr>
+                        <th>Physical State</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="physical" placeholder="Provide remarks about the physical state of the unit"></td>
+                    </tr>
+                    <tr>
+                        <th>Diagnostic Result</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
                         <td>
-                            <div class="img-drop" id="imgDrop" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                <div id="imgDropText">Drag & Drop or paste image here<br>or click to choose</div>
-                                <input id="fileInput" type="file" accept="image/*" style="display:none;">
-                                <div id="imgPreview" style="margin-top:10px;"></div>
+                            <div class="img-drop" id="imgDrop" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                <div class="img-drop-text" id="imgDropText">Drag & Drop or paste image here</div>
+                                <input id="fileInput" type="file" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+                                <div id="imgPreview"></div>
                             </div>
                         </td>
                     </tr>
-                    <tr><th>Specific Instruction</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="instruction" placeholder="Provide specific instruction/s for the unit"></td></tr>
-                    <tr><th>Checklist</th><td class="col-x" onclick="removeRowUI(this)">✕</td><td><input id="checklist" placeholder="Provide remarks regarding checklist for the unit"></td></tr>
+                    <tr>
+                        <th>Specific Instruction</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="instruction" placeholder="Provide remarks regarding the specific instruction/s for the unit"></td>
+                    </tr>
+                    <tr>
+                        <th>Checklist</th>
+                        <td class="col-x" onclick="removeRowUI(this)">✕</td>
+                        <td><input id="checklist" placeholder="Provide remarks regarding checklist for the unit"></td>
+                    </tr>
                 </tbody>
             </table>
 
-            <p class="note">Make sure all report details are filled before pressing send</p>
+            <p class="note">Make sure all of the report details are filled before pressing send</p>
 
-            <div style="text-align: center; margin-top: 20px;">
-                <button type="submit">Send Report</button>
+            <div class="send-button-container">
+                <button type="button" class="btn-submit" onclick="sendReport()">Send Report</button>
             </div>
-
-            <input type="hidden" name="body" id="bodyInput">
-            <input type="hidden" name="image_base64" id="imageBase64">
         </form>
     </div>
 
     <footer></footer>
 
     <script>
-        // (All original JS logic from previous working version goes here unchanged)
-        // toggleOptions, updateChips, removeRowUI, image handling, buildHtmlBody, etc.
-        // --- keep the same functions you have now ---
+        let selectedRecipients = [];
+        let uploadedImage = null;
+
+        function toggleOptions() {
+            const options = document.getElementById('options');
+            options.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const selectBox = document.querySelector('.select-box');
+            if (!selectBox.contains(event.target)) {
+                document.getElementById('options').classList.remove('show');
+            }
+        });
+
+        document.querySelectorAll('.opt-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    if (!selectedRecipients.includes(this.value)) {
+                        selectedRecipients.push(this.value);
+                    }
+                } else {
+                    selectedRecipients = selectedRecipients.filter(email => email !== this.value);
+                }
+                updateChips();
+            });
+        });
+
+        function updateChips() {
+            const chipWrap = document.getElementById('chipWrap');
+            chipWrap.innerHTML = '';
+            
+            selectedRecipients.forEach(email => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.innerHTML = `
+                    ${email}
+                    <span class="remove" onclick="removeRecipient('${email}')">✕</span>
+                `;
+                chipWrap.appendChild(chip);
+            });
+        }
+
+        function removeRecipient(email) {
+            selectedRecipients = selectedRecipients.filter(e => e !== email);
+            
+            document.querySelectorAll('.opt-checkbox').forEach(checkbox => {
+                if (checkbox.value === email) {
+                    checkbox.checked = false;
+                }
+            });
+            
+            updateChips();
+        }
+
+        function removeRowUI(element) {
+            const row = element.parentElement;
+            row.classList.add('removed');
+        }
+
+        function resetToDefault() {
+            document.querySelectorAll('input[type="text"], input').forEach(input => {
+                if (input.type !== 'checkbox' && input.type !== 'file') {
+                    input.value = '';
+                }
+            });
+
+            selectedRecipients = [];
+            document.querySelectorAll('.opt-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateChips();
+
+            document.querySelectorAll('tr').forEach(row => {
+                row.classList.remove('removed');
+            });
+
+            uploadedImage = null;
+            document.getElementById('imgPreview').innerHTML = '';
+            document.getElementById('imgDropText').style.display = 'block';
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                displayImage(files[0]);
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                displayImage(file);
+            }
+        }
+
+        function displayImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImage = e.target.result;
+                document.getElementById('imgDropText').style.display = 'none';
+                document.getElementById('imgPreview').innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <div style="margin-top: 10px;">
+                        <button type="button" onclick="clearImage()" style="background-color: #ff6b6b; padding: 8px 20px;">Remove Image</button>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImage() {
+            uploadedImage = null;
+            document.getElementById('imgPreview').innerHTML = '';
+            document.getElementById('imgDropText').style.display = 'block';
+            document.getElementById('fileInput').value = '';
+        }
+
+        document.addEventListener('paste', function(event) {
+            const items = event.clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile();
+                    displayImage(blob);
+                    break;
+                }
+            }
+        });
+
+        function sendReport() {
+            if (selectedRecipients.length === 0) {
+                alert('Please select at least one recipient');
+                return;
+            }
+
+            const subject = document.getElementById('subjectInput').value;
+            if (!subject.trim()) {
+                alert('Please provide an email subject');
+                return;
+            }
+
+            const reportData = {
+                recipients: selectedRecipients,
+                subject: subject,
+                data: {}
+            };
+
+            document.querySelectorAll('tbody tr:not(.removed)').forEach(row => {
+                const th = row.querySelector('th');
+                const input = row.querySelector('input[type="text"], input:not([type="file"]):not([type="checkbox"])');
+                
+                if (th && input && input.value.trim()) {
+                    reportData.data[th.textContent] = input.value;
+                }
+            });
+
+            if (uploadedImage) {
+                reportData.image = uploadedImage;
+            }
+
+            console.log('Report Data:', reportData);
+            alert('Report sent successfully!\n\nRecipients: ' + selectedRecipients.join(', '));
+            
+            resetToDefault();
+        }
     </script>
 </body>
 </html>
+charles.txt
+20 KB
